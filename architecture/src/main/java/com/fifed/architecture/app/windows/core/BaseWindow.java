@@ -184,7 +184,7 @@ public abstract class BaseWindow implements ObserverActivity {
         return windowShowing;
     }
 
-    public BaseWindow enableWrapContentWindowMode(int gravity, boolean isWidthWrapContent, boolean isHeightWrapContent){
+    public BaseWindow withWrapContentWindowMode(int gravity, boolean isWidthWrapContent, boolean isHeightWrapContent){
         rootVeiwParams.height = isHeightWrapContent ? ViewGroup.LayoutParams.WRAP_CONTENT : ViewGroup.LayoutParams.MATCH_PARENT;
         rootVeiwParams.width =  isWidthWrapContent ? ViewGroup.LayoutParams.WRAP_CONTENT : ViewGroup.LayoutParams.MATCH_PARENT;
         rootView.setLayoutParams(rootVeiwParams);
@@ -205,26 +205,6 @@ public abstract class BaseWindow implements ObserverActivity {
 
         if(statusBarView != null){
             statusBarView.setVisibility(View.GONE);
-        }
-        if(isWindowShowing()){
-            windowManager.updateViewLayout(rootView, windowParams);
-        }
-        return this;
-    }
-    public BaseWindow disableWrapContentWindowMode(){
-        rootVeiwParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
-        rootVeiwParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        rootView.setLayoutParams(rootVeiwParams);
-
-        decorViewParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
-        decorViewParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        decorView.setLayoutParams(decorViewParams);
-
-        windowParams.height = WindowManager.LayoutParams.MATCH_PARENT;
-        windowParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-
-        if(statusBarView != null){
-            statusBarView.setVisibility(View.VISIBLE);
         }
         if(isWindowShowing()){
             windowManager.updateViewLayout(rootView, windowParams);

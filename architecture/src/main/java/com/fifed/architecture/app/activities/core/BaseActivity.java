@@ -93,7 +93,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
 
     @Override
     protected void onDestroy() {
-        presenter.onPresenterDestroy();
+        if(presenter !=  null) {
+            presenter.onPresenterDestroy();
+        }
         managerUI.onDestroyActivity();
         super.onDestroy();
     }
@@ -115,7 +117,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
 
     protected void doubleBackPressed() {
         if (!isClickedBackPressed && getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            UserSpecialInformer.showInformationForUser(rootView, getString(getExitDoubleClickText()), getSnakbarTextColor(), getSnakbarBackgroundColor());
+            UserSpecialInformer.showInformationForUser(rootView, getString(getExitWithDoubleClickText()), getSnakbarTextColor(), getSnakbarBackgroundColor());
             isClickedBackPressed = true;
             rootView.postDelayed(new Runnable() {
                 @Override
@@ -126,7 +128,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
         } else super.onBackPressed();
     }
     @StringRes
-    public abstract int getExitDoubleClickText();
+    public abstract int getExitWithDoubleClickText();
 
     protected @ColorInt int getSnakbarBackgroundColor() {
         return UserSpecialInformer.DEFAULT_BACKGROUND_COLOR;
