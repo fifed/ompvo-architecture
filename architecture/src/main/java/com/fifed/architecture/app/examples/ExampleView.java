@@ -41,6 +41,16 @@ public class ExampleView extends View implements ObserverActivity {
     }
 
     @Override
+    public void onPassiveObserveUpdateData(Model model) {
+
+    }
+
+    @Override
+    public void onPassiveObserveError(ErrorData errorData) {
+
+    }
+
+    @Override
     public String getObserverTag() {
         return getClass().getSimpleName() + hashCode();
     }

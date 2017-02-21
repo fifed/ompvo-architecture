@@ -8,4 +8,5 @@ import com.fifed.architecture.datacontroller.interaction.core.Action;
  */
 public interface InteractorActionInterface {
     void onUserAction(Action action);
+    void onObserverIsDestroyed(String observerTag);
 }

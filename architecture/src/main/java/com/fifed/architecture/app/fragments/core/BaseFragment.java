@@ -54,6 +54,7 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
         super.onCreate(savedInstanceState);
         TAG = getClass().getSimpleName() + String.valueOf(hashCode());
         setRetainInstance(true);
+        ((ObservebleActivity) getActivity()).addAsPassiveObservers(this);
     }
 
     @Override
@@ -88,6 +89,11 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
         super.onDestroyView();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ((ObservebleActivity) getActivity()).removePassiveObservers(this);
+    }
 
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {

@@ -30,6 +30,11 @@ public abstract class BaseViewPresenter implements Presenter, ObserverInteractor
     }
 
     @Override
+    public void notifyObserverIsDestroyed(String observerTag) {
+        getActionInterface().onObserverIsDestroyed(observerTag);
+    }
+
+    @Override
     public void onUpdateData(Model model) {
         activityView.onUpdateData(model);
     }

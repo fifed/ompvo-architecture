@@ -43,4 +43,10 @@ public class Interactor extends BaseInteractor {
 
 
     }
+
+    @Override
+    public void onObserverIsDestroyed(String observerTag) {
+
+    }
+
 }

@@ -33,12 +33,14 @@ import com.fifed.architecture.datacontroller.interaction.core.ErrorData;
 import com.fifed.architecture.datacontroller.interaction.core.Model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Fedir on 30.06.2016.
  */
 public abstract class BaseActivity extends AppCompatActivity implements ObservebleActivity, ActivityView, ActivityActionInterface, ActivityStateInterface, ActivityContentInterface, FragmentFeedBackInterface {
     private ArrayList<ObserverActivity> observerList = new ArrayList<>();
+    private List<ObserverActivity> passiveObserverList = new ArrayList<>();
     protected ManagerUI managerUI;
     private Presenter presenter;
     private volatile boolean isClickedBackPressed;
@@ -181,11 +183,29 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
                     break;
                 }
             }
+            for (int i = 0; i < passiveObserverList.size(); i++) {
+                ObserverActivity observer = passiveObserverList.get(i);
+                if(!observerList.contains(observer)) {
+                    if (observer.getObserverTag().equals(model.getAction().getTAG())) {
+                        observer.onPassiveObserveUpdateData(model);
+                        break;
+                    }
+                }
+            }
+
         } else {
             for (int i = 0; i < observerList.size(); i++) {
                 ObserverActivity observer = observerList.get(i);
                 if (ModelFilter.isObserverWorkingWithModel(observer, model)) {
                     observer.onUpdateData(model);
+                }
+            }
+            for (int i = 0; i < passiveObserverList.size(); i++) {
+                ObserverActivity observer = passiveObserverList.get(i);
+                if(!observerList.contains(observer)) {
+                    if (ModelFilter.isObserverWorkingWithModel(observer, model)) {
+                        observer.onPassiveObserveUpdateData(model);
+                    }
                 }
             }
         }
@@ -205,6 +225,25 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
             ObserverActivity observer = observerList.get(i);
             if (observer.getObserverTag().equals(errorData.getTAG())) observer.onError(errorData);
         }
+
+        for (int i = 0; i < passiveObserverList.size(); i++) {
+            ObserverActivity observer = passiveObserverList.get(i);
+            if (!observerList.contains(observer) && observer.getObserverTag().equals(errorData.getTAG())){
+                observer.onPassiveObserveError(errorData);
+            }
+        }
+
+    }
+
+    @Override
+    public void addAsPassiveObservers(ObserverActivity observer) {
+        passiveObserverList.add(observer);
+    }
+
+    @Override
+    public void removePassiveObservers(ObserverActivity observer) {
+        passiveObserverList.remove(observer);
+        presenter.notifyObserverIsDestroyed(observer.getObserverTag());
     }
 
     @Override

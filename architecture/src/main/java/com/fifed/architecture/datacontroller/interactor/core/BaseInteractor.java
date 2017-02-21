@@ -13,6 +13,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -20,6 +21,8 @@ import java.util.ArrayList;
  */
 public abstract class BaseInteractor implements ObservableInteractor, InteractorActionInterface {
     private ArrayList<ObserverInteractor> observerList = new ArrayList<>();
+    private List<Model> modelBuffer = new ArrayList<>();
+    private List<ErrorData> errorBuffer = new ArrayList<>();
     protected Context context;
 
 
@@ -31,6 +34,7 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
     @Override
     public void registerObserver(ObserverInteractor observer) {
         observerList.add(observer);
+        pushBuffers();
     }
 
     @Override
@@ -40,17 +44,25 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
 
     @Override
     public void notifyObserversOnUpdateData(Model model) {
-        for (int i = 0; i < observerList.size(); i++) {
-            ObserverInteractor observer = observerList.get(i);
-            observer.onUpdateData(model);
+        if(observerList.size() == 0){
+            writeBufferModel(model);
+        } else {
+            for (int i = 0; i < observerList.size(); i++) {
+                ObserverInteractor observer = observerList.get(i);
+                observer.onUpdateData(model);
+            }
         }
     }
 
     @Override
     public void notifyObserversOnError(ErrorData errorData) {
-        for (int i = 0; i < observerList.size(); i++) {
-            ObserverInteractor observer = observerList.get(i);
-            observer.onError(errorData);
+        if(observerList.size() == 0){
+            writeBufferError(errorData);
+        } else {
+            for (int i = 0; i < observerList.size(); i++) {
+                ObserverInteractor observer = observerList.get(i);
+                observer.onError(errorData);
+            }
         }
     }
 
@@ -61,6 +73,36 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
 
     public Context getContext() {
         return context;
+    }
+
+    private void writeBufferError(ErrorData error){
+        errorBuffer.add(error);
+    }
+
+    private void writeBufferModel(Model model){
+        modelBuffer.add(model);
+    }
+
+    private void pushBuffers(){
+        if(modelBuffer.size() > 0) {
+            for (int i = 0; i < observerList.size(); i++) {
+                ObserverInteractor observer = observerList.get(i);
+                for (int j = 0; j < modelBuffer.size(); j++) {
+                    observer.onUpdateData(modelBuffer.get(j));
+                }
+            }
+            modelBuffer.clear();
+        }
+
+        if(errorBuffer.size() > 0) {
+            for (int i = 0; i < observerList.size(); i++) {
+                ObserverInteractor observer = observerList.get(i);
+                for (int j = 0; j < modelBuffer.size(); j++) {
+                    observer.onError(errorBuffer.get(j));
+                }
+            }
+            errorBuffer.clear();
+        }
     }
 
 }

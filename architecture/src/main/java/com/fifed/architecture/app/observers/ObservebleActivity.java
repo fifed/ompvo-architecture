@@ -10,6 +10,8 @@ import com.fifed.architecture.datacontroller.interaction.core.Model;
 public interface ObservebleActivity {
     void registerObserver(ObserverActivity obsever);
     void unregisterObserver(ObserverActivity observer);
+    void addAsPassiveObservers(ObserverActivity observer);
+    void removePassiveObservers(ObserverActivity observer);
     boolean notifyOnBackPressed();
     void notifyObserversOnUpdateData(Model model);
     void notifyObserversOnError(ErrorData errorData);
