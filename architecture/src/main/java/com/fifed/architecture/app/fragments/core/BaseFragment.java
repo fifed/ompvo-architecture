@@ -4,6 +4,8 @@ import android.app.Service;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.LayoutRes;
@@ -43,10 +45,18 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-       View rootView = inflater.inflate(getLayoutResource(), null);
-        initUI(rootView);
+        View root;
+        try {
+            ViewDataBinding vb = DataBindingUtil.inflate(inflater, getLayoutResource(), null, false);
+            onBindingFinish(vb);
+            root = vb.getRoot();
+        } catch (NoClassDefFoundError e) {
+            root = inflater.inflate(getLayoutResource(), null);
+
+        }
+        initUI(root);
         setListeners();
-        return rootView;
+        return root;
     }
 
     @Override
@@ -143,7 +153,8 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
     public ActivityActionInterface getActionInterface() {
         return (ActivityActionInterface) getActivity();
     }
-    protected abstract View initUI(View v);
+    protected void initUI(View v){}
+    protected void onBindingFinish(ViewDataBinding vb){}
     protected abstract void setListeners();
     protected  void onFragmentRegisteredAsObserver(){
 

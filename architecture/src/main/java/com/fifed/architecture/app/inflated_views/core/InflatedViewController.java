@@ -1,5 +1,7 @@
 package com.fifed.architecture.app.inflated_views.core;
 
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.view.View;
@@ -17,7 +19,8 @@ import java.lang.ref.WeakReference;
 public abstract class InflatedViewController implements ObserverActivity, View.OnAttachStateChangeListener {
     private View inflatedView;
     private BaseActivity activity;
-    private @IdRes int containerID;
+    private @IdRes
+    int containerID;
 
     public InflatedViewController(BaseActivity activity) {
         this.activity = new WeakReference<>(activity).get();
@@ -60,16 +63,25 @@ public abstract class InflatedViewController implements ObserverActivity, View.O
     }
 
     private void initView(){
-        inflatedView = activity.getLayoutInflater().inflate(getLayoutResource(), null);
+        try {
+            ViewDataBinding vb = DataBindingUtil.inflate(activity.getLayoutInflater(), getLayoutResource(), null, false);
+            onBindingFinish(vb);
+            inflatedView  = vb.getRoot();
+        } catch (NoClassDefFoundError e) {
+            inflatedView = activity.getLayoutInflater().inflate(getLayoutResource(), null);
+        }
         setListeners();
         onCreatedView(inflatedView);
-        if(containerID != 0){
+        if (containerID != 0) {
             addViewToContainer();
         }
     }
 
-    protected abstract void onCreatedView(View v);
-    protected abstract @LayoutRes int getLayoutResource();
+    protected void onBindingFinish(ViewDataBinding vb){}
+
+    protected  void onCreatedView(View v){}
+    protected abstract @LayoutRes
+    int getLayoutResource();
 
 
     @Override
