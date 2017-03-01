@@ -114,7 +114,16 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
             } else {
                 animation = AnimationUtils.loadAnimation(getActivity(), R.anim.fragment_animation_exit);
             }
-        } else animation = super.onCreateAnimation(transit, enter, nextAnim);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    FragmentAnimUtils.restoreAnim();
+                }
+            }, animation.getDuration());
+
+        } else {
+            animation = super.onCreateAnimation(transit, enter, nextAnim);
+        }
         return animation;
     }
 
