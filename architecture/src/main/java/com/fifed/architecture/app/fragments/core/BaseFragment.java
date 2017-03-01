@@ -80,7 +80,6 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
         super.onViewCreated(view, savedInstanceState);
         ((ObservebleActivity) getActivity()).registerObserver(this);
         onFragmentRegisteredAsObserver();
-        FragmentAnimUtils.restoreAnim();
     }
 
 
