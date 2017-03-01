@@ -9,7 +9,7 @@ import java.util.Map;
  * Created by Fedir on 10.07.2016.
  */
 public class FcmPushData implements FcmPush {
-    Map<String, String> data;
+    private Map<String, String> data;
 
     public Map<String, String> getData() {
         return data;

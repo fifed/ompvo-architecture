@@ -8,6 +8,9 @@ public class ErrorData {
     private String TAG;
     private String globalErrorMessage;
 
+    public ErrorData(String TAG){
+        this.TAG = TAG;
+    }
 
     public ErrorData(String TAG, String globalErrorMessage) {
         this.TAG = TAG;
@@ -22,7 +25,5 @@ public class ErrorData {
     public String getGlobalErrorMessage() {
         return globalErrorMessage;
     }
-
-
 
 }
