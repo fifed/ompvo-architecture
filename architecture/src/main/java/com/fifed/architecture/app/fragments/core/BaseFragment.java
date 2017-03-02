@@ -51,9 +51,8 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
             ViewDataBinding vb = DataBindingUtil.inflate(inflater, getLayoutResource(), null, false);
             onBindingFinish(vb);
             root = vb.getRoot();
-        } catch (NoClassDefFoundError e) {
+        } catch (NoClassDefFoundError | NullPointerException e) {
             root = inflater.inflate(getLayoutResource(), null);
-
         }
         initUI(root);
         setListeners();
