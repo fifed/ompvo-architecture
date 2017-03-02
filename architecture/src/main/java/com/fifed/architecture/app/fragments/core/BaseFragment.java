@@ -37,6 +37,7 @@ import com.fifed.architecture.app.observers.ObserverActivity;
  * Created by Fedir on 30.06.2016.
  */
 public abstract class BaseFragment extends Fragment implements ObserverActivity, View.OnClickListener{
+    private static boolean isEnabledRestoreAnim;
     private String TAG;
     private boolean fromBackStack;
     private boolean reloadedAsNewFragment;
@@ -113,12 +114,16 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
             } else {
                 animation = AnimationUtils.loadAnimation(getActivity(), R.anim.fragment_animation_exit);
             }
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    FragmentAnimUtils.restoreAnim();
-                }
-            }, animation.getDuration());
+            if(!isEnabledRestoreAnim) {
+                isEnabledRestoreAnim = true;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        FragmentAnimUtils.restoreAnim();
+                        isEnabledRestoreAnim = false;
+                    }
+                }, animation.getDuration());
+            }
 
         } else {
             animation = super.onCreateAnimation(transit, enter, nextAnim);
