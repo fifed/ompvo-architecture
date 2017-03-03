@@ -7,16 +7,18 @@ package com.fifed.architecture.datacontroller.interaction.core;
 public class ErrorData {
     private String TAG;
     private String globalErrorMessage;
+    private Throwable error;
 
-    public ErrorData(String TAG){
-        this.TAG = TAG;
-    }
-
-    public ErrorData(String TAG, String globalErrorMessage) {
+    public ErrorData(String TAG, String globalErrorMessage, Throwable error){
         this.TAG = TAG;
         this.globalErrorMessage = globalErrorMessage;
+        this.error = error;
     }
 
+    public ErrorData(String TAG, Throwable error) {
+        this.TAG = TAG;
+        this.error = error;
+    }
 
     public String getTAG() {
         return TAG;
@@ -26,4 +28,7 @@ public class ErrorData {
         return globalErrorMessage;
     }
 
+    public Throwable getError() {
+        return error;
+    }
 }
