@@ -72,8 +72,8 @@ public abstract class BaseContentActyvityManagerUI implements ManagerUIContentAc
             BaseFragment dashboardFragment = (BaseFragment) getActivity().getSupportFragmentManager().findFragmentByTag(getDashBoardFragmentClass().getSimpleName());
             dashboardFragment.setDataPack(pack);
             dashboardFragment.reloadedAsNewFragment(true);
-            for (int i = 0; i < fm.getBackStackEntryCount(); i++) {
-                fm.popBackStack(i, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                fm.popBackStack();
             }
             if(dashboardFragment.isAdded()) {
                 dashboardFragment.onReloadFragmentDataWithOutChangeState(pack);
