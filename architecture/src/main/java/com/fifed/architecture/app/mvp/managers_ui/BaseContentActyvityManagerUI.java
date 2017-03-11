@@ -88,7 +88,7 @@ public abstract class BaseContentActyvityManagerUI implements ManagerUIContentAc
         boolean containsInBackStack = false;
         if(sameFragment != null) {
             for (int i = 0; i < fm.getBackStackEntryCount(); i++) {
-                if (fm.getBackStackEntryAt(i).getName().equals(sameFragment.getClass().getSimpleName())) {
+                if (sameFragment.getClass().getSimpleName().equals(fm.getBackStackEntryAt(i).getName())) {
                     containsInBackStack = true;
                     break;
                 }
