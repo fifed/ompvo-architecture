@@ -1,7 +1,6 @@
 package com.fifed.architecture.app.activities.core;
 
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
@@ -27,13 +26,15 @@ import com.fifed.architecture.app.mvp.views.ActivityView;
 import com.fifed.architecture.app.observers.ObservebleActivity;
 import com.fifed.architecture.app.observers.ObserverActivity;
 import com.fifed.architecture.app.utils.ModelFilter;
-import com.fifed.architecture.app.utils.UserSpecialInformer;
+import com.fifed.architecture.app.utils.user_informer.UserSpecialInformer;
 import com.fifed.architecture.datacontroller.interaction.core.Action;
 import com.fifed.architecture.datacontroller.interaction.core.ErrorData;
 import com.fifed.architecture.datacontroller.interaction.core.Model;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.fifed.architecture.app.utils.user_informer.UserSpecialInformer.DEF_COLOR;
 
 /**
  * Created by Fedir on 30.06.2016.
@@ -133,13 +134,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
     public abstract int getExitWithDoubleClickText();
 
     protected @ColorInt int getSnakbarBackgroundColor() {
-        return UserSpecialInformer.DEFAULT_BACKGROUND_COLOR;
+        return DEF_COLOR;
     }
 
     protected
     @ColorInt
     int getSnakbarTextColor() {
-        return UserSpecialInformer.DEFAULT_TEXT_COLOR;
+        return DEF_COLOR;
     }
 
 
@@ -253,8 +254,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
 
     protected void handleErrorInActivity(ErrorData errorData) {
         if(!errorData.getGlobalErrorMessage().equals(lastError)) {
-            UserSpecialInformer.showInformationForUser(rootView, errorData.getGlobalErrorMessage(),
-                    Color.RED, Color.BLACK);
+            UserSpecialInformer.showInfoErrorForUser(rootView, errorData.getGlobalErrorMessage(),
+                    DEF_COLOR, DEF_COLOR);
             lastError = errorData.getGlobalErrorMessage();
             rootView.postDelayed(new Runnable() {
                 @Override
