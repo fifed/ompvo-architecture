@@ -1,6 +1,7 @@
 package com.fifed.architecture.app.mvp.managers_ui;
 
 import android.os.Bundle;
+import android.support.annotation.AnimRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -102,14 +103,14 @@ public abstract class BaseContentActyvityManagerUI implements ManagerUIContentAc
         } else {
             if (toBackStack) {
                 activity.getSupportFragmentManager().beginTransaction().setCustomAnimations(
-                        R.anim.fragment_animation_enter, R.anim.fragment_animation_exit,
-                        R.anim.fragment_animation_pop_enter, R.anim.fragment_animation_pop_exit)
+                        getFragmentAnimationEnter(), getFragmentAnimationExit(),
+                        getFragmentAnimationPopEnter(), getFragmentAnimationPopExit())
                         .addToBackStack(fragment.getClass().getSimpleName())
                         .replace(getIdFragmentsContainer(), fragment, fragment.getClass().getSimpleName()).commitAllowingStateLoss();
             } else {
                 activity.getSupportFragmentManager().beginTransaction().setCustomAnimations(
-                        R.anim.fragment_animation_enter, R.anim.fragment_animation_exit,
-                        R.anim.fragment_animation_pop_enter, R.anim.fragment_animation_pop_exit)
+                        getFragmentAnimationEnter(), getFragmentAnimationExit(),
+                        getFragmentAnimationPopEnter(), getFragmentAnimationPopExit())
                         .replace(getIdFragmentsContainer(), fragment, fragment.getClass().getSimpleName()).commitAllowingStateLoss();
             }
         }
@@ -198,4 +199,25 @@ public abstract class BaseContentActyvityManagerUI implements ManagerUIContentAc
         toolbar.setNavigationIcon(null);
     }
 
+    @AnimRes
+    protected int getFragmentAnimationEnter(){
+        return R.anim.fragment_animation_enter;
+    }
+
+    @AnimRes
+    protected int getFragmentAnimationExit(){
+        return R.anim.fragment_animation_exit;
+    }
+
+    @AnimRes
+    protected int getFragmentAnimationPopEnter(){
+        return R.anim.fragment_animation_pop_enter;
+    }
+
+    @AnimRes
+    protected int getFragmentAnimationPopExit(){
+        return R.anim.fragment_animation_pop_exit;
+    }
+
 }
+
