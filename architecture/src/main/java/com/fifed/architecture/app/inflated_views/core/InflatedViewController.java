@@ -19,8 +19,7 @@ import java.lang.ref.WeakReference;
 public abstract class InflatedViewController implements ObserverActivity, View.OnAttachStateChangeListener {
     private View inflatedView;
     private BaseActivity activity;
-    private @IdRes
-    int containerID;
+    private @IdRes int containerID;
 
     public InflatedViewController(BaseActivity activity) {
         this.activity = new WeakReference<>(activity).get();
@@ -80,8 +79,7 @@ public abstract class InflatedViewController implements ObserverActivity, View.O
     protected void onBindingFinish(ViewDataBinding vb){}
 
     protected  void onCreatedView(View v){}
-    protected abstract @LayoutRes
-    int getLayoutResource();
+    protected abstract @LayoutRes int getLayoutResource();
 
 
     @Override

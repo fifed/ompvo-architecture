@@ -27,7 +27,6 @@ import com.fifed.architecture.app.activities.interfaces.ActivityContentInterface
 import com.fifed.architecture.app.activities.interfaces.ActivityStateInterface;
 import com.fifed.architecture.app.activities.interfaces.feedback_interfaces.core.FragmentFeedBackInterface;
 import com.fifed.architecture.app.constants.BaseFragmentIdentifier;
-import com.fifed.architecture.app.mvp.view_data_pack.core.DataPack;
 import com.fifed.architecture.app.observers.ObservebleActivity;
 import com.fifed.architecture.app.observers.ObserverActivity;
 import com.fifed.architecture.app.utils.ResourceHelper;
@@ -132,14 +131,14 @@ public abstract class BaseDialogFragment extends DialogFragment implements Obser
         return (FragmentFeedBackInterface) getActivity();
     }
 
-    protected void changeFragmentTo(final BaseFragmentIdentifier fragmentsID, @Nullable final DataPack pack){
+    protected void changeFragmentTo(final BaseFragmentIdentifier fragmentsID, @Nullable final Bundle bundle){
         if(getFragmentFeedBackInterface() != null && !isAfterSaveInstanteState()){
-            getFragmentFeedBackInterface().changeFragmentTo(fragmentsID, pack);
+            getFragmentFeedBackInterface().changeFragmentTo(fragmentsID, bundle);
         } else if(getFragmentFeedBackInterface() != null){
             new Handler(getActivity().getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    changeFragmentTo(fragmentsID, pack);
+                    changeFragmentTo(fragmentsID, bundle);
                 }
             }, 500);
         }

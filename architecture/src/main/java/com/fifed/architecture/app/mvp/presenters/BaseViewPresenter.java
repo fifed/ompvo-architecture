@@ -11,8 +11,6 @@ import com.fifed.architecture.datacontroller.interactor.observer.interfaces.Obse
 
 import java.lang.ref.WeakReference;
 
-import static com.fifed.architecture.app.application.core.BaseApp.getActionInterface;
-
 
 /**
  * Created by Fedir on 04.07.2016.
@@ -54,6 +52,6 @@ public abstract class BaseViewPresenter implements Presenter, ObserverInteractor
         getObservable().unregisterObserver(this);
     }
 
-    protected abstract InteractorActionInterface getActionIntarface();
+    protected abstract InteractorActionInterface getActionInterface();
     protected abstract ObservableInteractor getObservable();
 }

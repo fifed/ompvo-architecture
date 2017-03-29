@@ -8,6 +8,7 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -28,7 +29,6 @@ import com.fifed.architecture.app.activities.interfaces.ActivityStateInterface;
 import com.fifed.architecture.app.activities.interfaces.feedback_interfaces.core.FragmentFeedBackInterface;
 import com.fifed.architecture.app.constants.BaseFragmentIdentifier;
 import com.fifed.architecture.app.fragments.utils.FragmentAnimUtils;
-import com.fifed.architecture.app.mvp.view_data_pack.core.DataPack;
 import com.fifed.architecture.app.observers.ObservebleActivity;
 import com.fifed.architecture.app.observers.ObserverActivity;
 
@@ -42,6 +42,8 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
     private boolean fromBackStack;
     private boolean reloadedAsNewFragment;
     private static Class<? extends Fragment> lastFragment;
+    private final String OUT_STATE_DATA = "outStateData";
+    private Bundle outStateData;
 
     @Nullable
     @Override
@@ -53,6 +55,7 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
             root = vb.getRoot();
         } catch (NoClassDefFoundError | NullPointerException e) {
             root = inflater.inflate(getLayoutResource(), null);
+
         }
         initUI(root);
         setListeners();
@@ -60,11 +63,26 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBundle(OUT_STATE_DATA, outStateData);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(savedInstanceState != null) {
+            outStateData = savedInstanceState.getBundle(OUT_STATE_DATA);
+        }
         TAG = getClass().getSimpleName() + String.valueOf(hashCode());
         setRetainInstance(true);
         ((ObservebleActivity) getActivity()).addAsPassiveObservers(this);
+    }
+
+    @Override
+    public void setArguments(Bundle args) {
+        outStateData = args;
+        super.setArguments(args);
     }
 
     @Override
@@ -123,7 +141,6 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
                     }
                 }, animation.getDuration());
             }
-
         } else {
             animation = super.onCreateAnimation(transit, enter, nextAnim);
         }
@@ -149,14 +166,14 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
         return (FragmentFeedBackInterface) getActivity();
     }
 
-    protected void changeFragmentTo(final BaseFragmentIdentifier fragmentsID, @Nullable final DataPack pack){
+    protected void changeFragmentTo(final BaseFragmentIdentifier fragmentsID, @Nullable final Bundle bundle){
         if(getFragmentFeedBackInterface() != null && !isAfterSaveInstanteState()){
-            getFragmentFeedBackInterface().changeFragmentTo(fragmentsID, pack);
+            getFragmentFeedBackInterface().changeFragmentTo(fragmentsID, bundle);
         } else if(getFragmentFeedBackInterface() != null){
             new Handler(getActivity().getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    changeFragmentTo(fragmentsID, pack);
+                    changeFragmentTo(fragmentsID, bundle);
                 }
             }, 500);
         }
@@ -235,7 +252,6 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
         return ((ActivityStateInterface)getActivity()).isAfterSaveInstanceState();
     }
 
-    public abstract BaseFragment setDataPack(DataPack pack);
 
     public BaseFragment reloadedAsNewFragment(boolean reloadedAsNewFragment){
         this.reloadedAsNewFragment = reloadedAsNewFragment;
@@ -244,8 +260,18 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
     protected boolean isReloadedAsNewFragment(){
         return reloadedAsNewFragment;
     }
-    public void onReloadFragmentDataWithOutChangeState(DataPack pack){
+    @CallSuper
+    public void onReloadFragmentDataWithOutChangeState(@Nullable Bundle bundle){
+        outStateData = bundle;
+    }
+    @CallSuper
+    public void onReloadFromPassiveState(Bundle bundle) {
+        outStateData = bundle;
+    }
 
+    @Nullable
+    protected Bundle getFragmentData(){
+        return outStateData;
     }
     public static Class<? extends Fragment> getLastVisibleFragment() {
         return lastFragment;

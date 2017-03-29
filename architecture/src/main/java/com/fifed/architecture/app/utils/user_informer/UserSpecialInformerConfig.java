@@ -3,6 +3,10 @@ package com.fifed.architecture.app.utils.user_informer;
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
 
+/**
+ * Created by Fedir on 15.03.2017.
+ */
+
 public class UserSpecialInformerConfig {
     @ColorInt
     private int errorTextColor = Color.WHITE;

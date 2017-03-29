@@ -1,5 +1,6 @@
 package com.fifed.architecture.app.mvp.managers_ui;
 
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,7 +19,6 @@ import com.fifed.architecture.app.activities.interfaces.ActivityStateInterface;
 import com.fifed.architecture.app.fragments.core.BaseFragment;
 import com.fifed.architecture.app.fragments.utils.FragmentAnimUtils;
 import com.fifed.architecture.app.mvp.managers_ui.interfaces.ManagerUIContentActivity;
-import com.fifed.architecture.app.mvp.view_data_pack.core.DataPack;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
@@ -64,25 +64,25 @@ public abstract class BaseContentActyvityManagerUI implements ManagerUIContentAc
     }
 
 
-    protected void addFragmentToContainer(BaseFragment fragment, boolean toBackStack, @Nullable DataPack pack) {
-        fragment.setDataPack(pack);
+    protected void addFragmentToContainer(BaseFragment fragment, boolean toBackStack, @Nullable Bundle bundle) {
+        fragment.setArguments(bundle);
         FragmentManager fm = getActivity().getSupportFragmentManager();
         if (fragment.getClass() == getDashBoardFragmentClass()) {
             FragmentAnimUtils.revertAnim();
             BaseFragment dashboardFragment = (BaseFragment) getActivity().getSupportFragmentManager().findFragmentByTag(getDashBoardFragmentClass().getSimpleName());
-            dashboardFragment.setDataPack(pack);
             dashboardFragment.reloadedAsNewFragment(true);
+            dashboardFragment.onReloadFromPassiveState(bundle);
             for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
                 fm.popBackStack();
             }
             if(dashboardFragment.isAdded()) {
-                dashboardFragment.onReloadFragmentDataWithOutChangeState(pack);
+                dashboardFragment.onReloadFragmentDataWithOutChangeState(bundle);
             }
             return;
         }
         BaseFragment sameFragment = (BaseFragment) fm.findFragmentByTag(fragment.getClass().getSimpleName());
         if (sameFragment != null && sameFragment.isAdded()) {
-            sameFragment.onReloadFragmentDataWithOutChangeState(pack);
+            sameFragment.onReloadFragmentDataWithOutChangeState(bundle);
             return;
         }
         boolean containsInBackStack = false;
@@ -96,8 +96,8 @@ public abstract class BaseContentActyvityManagerUI implements ManagerUIContentAc
         }
         if (sameFragment != null && containsInBackStack) {
             FragmentAnimUtils.revertAnim();
-            sameFragment.setDataPack(pack);
             sameFragment.reloadedAsNewFragment(true);
+            sameFragment.onReloadFromPassiveState(bundle);
             fm.popBackStackImmediate(sameFragment.getClass().getSimpleName(), 0);
         } else {
             if (toBackStack) {

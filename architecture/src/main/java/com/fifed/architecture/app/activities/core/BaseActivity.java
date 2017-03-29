@@ -20,13 +20,11 @@ import com.fifed.architecture.app.constants.BaseFragmentIdentifier;
 import com.fifed.architecture.app.mvp.managers_ui.interfaces.core.ManagerUI;
 import com.fifed.architecture.app.mvp.presenters.BaseViewPresenter;
 import com.fifed.architecture.app.mvp.presenters.intefaces.Presenter;
-import com.fifed.architecture.app.mvp.view_data_pack.core.DataPack;
 import com.fifed.architecture.app.mvp.view_notification.ViewNotification;
 import com.fifed.architecture.app.mvp.views.ActivityView;
 import com.fifed.architecture.app.observers.ObservebleActivity;
 import com.fifed.architecture.app.observers.ObserverActivity;
 import com.fifed.architecture.app.utils.ModelFilter;
-import com.fifed.architecture.app.utils.user_informer.UserSpecialInformer;
 import com.fifed.architecture.datacontroller.interaction.core.Action;
 import com.fifed.architecture.datacontroller.interaction.core.ErrorData;
 import com.fifed.architecture.datacontroller.interaction.core.Model;
@@ -35,6 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.fifed.architecture.app.utils.user_informer.UserSpecialInformer.DEF_COLOR;
+import static com.fifed.architecture.app.utils.user_informer.UserSpecialInformer.showInfoErrorForUser;
+import static com.fifed.architecture.app.utils.user_informer.UserSpecialInformer.showInformationForUser;
 
 /**
  * Created by Fedir on 30.06.2016.
@@ -120,7 +120,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
 
     protected void doubleBackPressed() {
         if (!isClickedBackPressed && getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            UserSpecialInformer.showInformationForUser(rootView, getString(getExitWithDoubleClickText()), getSnakbarTextColor(), getSnakbarBackgroundColor());
+            showInformationForUser(rootView, getString(getExitWithDoubleClickText()), getSnakbarTextColor(), getSnakbarBackgroundColor());
             isClickedBackPressed = true;
             rootView.postDelayed(new Runnable() {
                 @Override
@@ -233,7 +233,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
                 observer.onPassiveObserveError(errorData);
             }
         }
-
     }
 
     @Override
@@ -248,13 +247,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
     }
 
     @Override
-    public void changeFragmentTo(BaseFragmentIdentifier fragmentsID, @Nullable DataPack pack) {
-        managerUI.changeFragmentTo(fragmentsID, pack);
+    public void changeFragmentTo(BaseFragmentIdentifier fragmentsID, @Nullable Bundle bundle) {
+        managerUI.changeFragmentTo(fragmentsID, bundle);
     }
 
     protected void handleErrorInActivity(ErrorData errorData) {
         if(!errorData.getGlobalErrorMessage().equals(lastError)) {
-            UserSpecialInformer.showInfoErrorForUser(rootView, errorData.getGlobalErrorMessage(),
+            showInfoErrorForUser(rootView, errorData.getGlobalErrorMessage(),
                     DEF_COLOR, DEF_COLOR);
             lastError = errorData.getGlobalErrorMessage();
             rootView.postDelayed(new Runnable() {
