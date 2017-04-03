@@ -75,15 +75,18 @@ public abstract class BaseContentActyvityManagerUI implements ManagerUIContentAc
                 FragmentAnimUtils.revertAnim();
             }
             BaseFragment dashboardFragment = (BaseFragment) getActivity().getSupportFragmentManager().findFragmentByTag(getDashBoardFragmentClass().getSimpleName());
-            dashboardFragment.reloadedAsNewFragment(true);
-            dashboardFragment.onReloadFromPassiveState(bundle);
-            for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
-                fm.popBackStack();
+            if(dashboardFragment!= null) {
+                dashboardFragment.reloadedAsNewFragment(true);
+                dashboardFragment.onReloadFromPassiveState(bundle);
+                for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                    fm.popBackStack();
+                }
+                if (dashboardFragment.isAdded()) {
+                    dashboardFragment.onReloadFragmentDataWithOutChangeState(bundle);
+                }
+                return;
             }
-            if(dashboardFragment.isAdded()) {
-                dashboardFragment.onReloadFragmentDataWithOutChangeState(bundle);
-            }
-            return;
+
         }
         BaseFragment sameFragment = (BaseFragment) fm.findFragmentByTag(fragment.getClass().getSimpleName());
         if (sameFragment != null && sameFragment.isAdded()) {
@@ -207,7 +210,7 @@ public abstract class BaseContentActyvityManagerUI implements ManagerUIContentAc
     }
 
     public void setEnabledFragmentAnimations(boolean enabled){
-        enabled = useFragmentAnim;
+        useFragmentAnim = enabled;
     }
 
     @AnimRes
