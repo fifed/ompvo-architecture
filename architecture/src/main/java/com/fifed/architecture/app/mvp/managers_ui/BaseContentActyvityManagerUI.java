@@ -5,6 +5,7 @@ import android.support.annotation.AnimRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -35,6 +36,7 @@ public abstract class BaseContentActyvityManagerUI implements ManagerUIContentAc
     private AppCompatActivity activity;
     private Toolbar toolbar;
     private ViewGroup toolbarContainer;
+    private boolean useFragmentAnim = true;
 
     public BaseContentActyvityManagerUI(AppCompatActivity activity) {
         this.activity = new WeakReference<>(activity).get();
@@ -69,7 +71,9 @@ public abstract class BaseContentActyvityManagerUI implements ManagerUIContentAc
         fragment.setArguments(bundle);
         FragmentManager fm = getActivity().getSupportFragmentManager();
         if (fragment.getClass() == getDashBoardFragmentClass()) {
-            FragmentAnimUtils.revertAnim();
+            if(useFragmentAnim) {
+                FragmentAnimUtils.revertAnim();
+            }
             BaseFragment dashboardFragment = (BaseFragment) getActivity().getSupportFragmentManager().findFragmentByTag(getDashBoardFragmentClass().getSimpleName());
             dashboardFragment.reloadedAsNewFragment(true);
             dashboardFragment.onReloadFromPassiveState(bundle);
@@ -101,16 +105,17 @@ public abstract class BaseContentActyvityManagerUI implements ManagerUIContentAc
             sameFragment.onReloadFromPassiveState(bundle);
             fm.popBackStackImmediate(sameFragment.getClass().getSimpleName(), 0);
         } else {
-            if (toBackStack) {
-                activity.getSupportFragmentManager().beginTransaction().setCustomAnimations(
+            FragmentTransaction transaction = fm.beginTransaction();
+            if(useFragmentAnim){
+                transaction.setCustomAnimations(
                         getFragmentAnimationEnter(), getFragmentAnimationExit(),
-                        getFragmentAnimationPopEnter(), getFragmentAnimationPopExit())
-                        .addToBackStack(fragment.getClass().getSimpleName())
+                        getFragmentAnimationPopEnter(), getFragmentAnimationPopExit());
+            }
+            if (toBackStack) {
+                transaction.addToBackStack(fragment.getClass().getSimpleName())
                         .replace(getIdFragmentsContainer(), fragment, fragment.getClass().getSimpleName()).commitAllowingStateLoss();
             } else {
-                activity.getSupportFragmentManager().beginTransaction().setCustomAnimations(
-                        getFragmentAnimationEnter(), getFragmentAnimationExit(),
-                        getFragmentAnimationPopEnter(), getFragmentAnimationPopExit())
+                transaction
                         .replace(getIdFragmentsContainer(), fragment, fragment.getClass().getSimpleName()).commitAllowingStateLoss();
             }
         }
@@ -199,6 +204,10 @@ public abstract class BaseContentActyvityManagerUI implements ManagerUIContentAc
         toolbar.setNavigationIcon(null);
     }
 
+    public void setEnabledFragmentAnimations(boolean enabled){
+        enabled = useFragmentAnim;
+    }
+
     @AnimRes
     protected int getFragmentAnimationEnter(){
         return R.anim.fragment_animation_enter;
@@ -220,4 +229,5 @@ public abstract class BaseContentActyvityManagerUI implements ManagerUIContentAc
     }
 
 }
+
 
