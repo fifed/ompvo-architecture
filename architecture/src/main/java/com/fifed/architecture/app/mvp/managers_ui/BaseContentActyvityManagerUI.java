@@ -100,7 +100,9 @@ public abstract class BaseContentActyvityManagerUI implements ManagerUIContentAc
             }
         }
         if (sameFragment != null && containsInBackStack) {
-            FragmentAnimUtils.revertAnim();
+            if(useFragmentAnim) {
+                FragmentAnimUtils.revertAnim();
+            }
             sameFragment.reloadedAsNewFragment(true);
             sameFragment.onReloadFromPassiveState(bundle);
             fm.popBackStackImmediate(sameFragment.getClass().getSimpleName(), 0);
