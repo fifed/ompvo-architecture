@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -69,7 +69,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements Obser
 
     protected abstract boolean isFullScreen();
 
-    protected abstract @ColorRes int getDialogWindowBackground();
+    protected abstract @DrawableRes int getDialogWindowBackground();
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
