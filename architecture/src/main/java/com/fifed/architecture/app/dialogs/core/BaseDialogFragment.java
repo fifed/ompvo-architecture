@@ -5,13 +5,13 @@ import android.app.Service;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.ColorRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StyleRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -83,8 +83,15 @@ public abstract class BaseDialogFragment extends DialogFragment implements Obser
         if(getDialogWindowBackground() != 0) {
             Window window = getDialog().getWindow();
             if(window != null) {
-                window.setBackgroundDrawable(new ColorDrawable(ResourceHelper.getColor(getDialogWindowBackground(), getActivity())));
+                window.setBackgroundDrawable((ResourceHelper.getResources(getDialogWindowBackground(), getActivity())));
             }
+        }
+    }
+
+    private void setWindowAnim(Dialog dialog){
+        Window window = dialog.getWindow();
+        if(window != null) {
+            window.setWindowAnimations(getWindowAnimStyle());
         }
     }
 
@@ -106,7 +113,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements Obser
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        return new Dialog(getActivity(), android.R.style.Theme){
+        Dialog dialog = new Dialog(getActivity(), android.R.style.Theme){
             @Override
             public void onBackPressed() {
                 if(!BaseDialogFragment.this.onBackPressed()){
@@ -114,6 +121,8 @@ public abstract class BaseDialogFragment extends DialogFragment implements Obser
                 }
             }
         };
+        setWindowAnim(dialog);
+        return dialog;
     }
 
 
@@ -149,6 +158,8 @@ public abstract class BaseDialogFragment extends DialogFragment implements Obser
     }
     protected abstract View initUI(View v);
     protected abstract void setListeners();
+    protected abstract @StyleRes
+    int getWindowAnimStyle();
     protected  void onFragmentRegisteredAsObserver(){
 
     }
