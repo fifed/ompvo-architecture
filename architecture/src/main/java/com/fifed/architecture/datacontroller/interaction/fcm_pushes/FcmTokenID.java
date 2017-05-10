@@ -6,7 +6,7 @@ import com.fifed.architecture.datacontroller.interaction.fcm_pushes.core.FcmPush
  * Created by Fedir on 10.07.2016.
  */
 public class FcmTokenID implements FcmPush {
-    String tokenID;
+    private String tokenID;
 
     public String getTokenID() {
         return tokenID;

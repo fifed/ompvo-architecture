@@ -2,15 +2,12 @@ package com.fifed.architecture.datacontroller.interactor.core;
 
 import android.content.Context;
 
+import com.fifed.architecture.app.mvp.presenters.intefaces.Presenter;
 import com.fifed.architecture.datacontroller.interaction.core.ErrorData;
-import com.fifed.architecture.datacontroller.interaction.fcm_pushes.core.FcmPush;
 import com.fifed.architecture.datacontroller.interaction.core.Model;
 import com.fifed.architecture.datacontroller.interactor.core.interfaces.InteractorActionInterface;
 import com.fifed.architecture.datacontroller.interactor.observer.interfaces.ObservableInteractor;
 import com.fifed.architecture.datacontroller.interactor.observer.interfaces.ObserverInteractor;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +25,14 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
 
     protected BaseInteractor(Context context) {
         this.context = context;
-        EventBus.getDefault().register(this);
     }
 
     @Override
     public void registerObserver(ObserverInteractor observer) {
         observerList.add(observer);
-        pushBuffers();
+        if(observer instanceof Presenter) {
+            pushBuffers();
+        }
     }
 
     @Override
@@ -44,7 +42,15 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
 
     @Override
     public void notifyObserversOnUpdateData(Model model) {
-        if(observerList.size() == 0){
+        boolean containsActiveActivity = false;
+        for (int i = 0; i < observerList.size(); i++) {
+            if(observerList.get(i) instanceof Presenter){
+                if(((Presenter)(observerList.get(i))).getObserverState() == Presenter.ObserverState.ACTIVE)
+                containsActiveActivity = true;
+                break;
+            }
+        }
+        if(observerList.size() == 0 || !containsActiveActivity){
             writeBufferModel(model);
         } else {
             for (int i = 0; i < observerList.size(); i++) {
@@ -56,7 +62,15 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
 
     @Override
     public void notifyObserversOnError(ErrorData errorData) {
-        if(observerList.size() == 0){
+        boolean containsActiveActivity = false;
+        for (int i = 0; i < observerList.size(); i++) {
+            if(observerList.get(i) instanceof Presenter){
+                if(((Presenter)(observerList.get(i))).getObserverState() == Presenter.ObserverState.ACTIVE)
+                    containsActiveActivity = true;
+                break;
+            }
+        }
+        if(observerList.size() == 0 || !containsActiveActivity){
             writeBufferError(errorData);
         } else {
             for (int i = 0; i < observerList.size(); i++) {
@@ -66,10 +80,6 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
         }
     }
 
-    @Subscribe
-    public void onPushEvent(FcmPush push) {
-
-    }
 
     public Context getContext() {
         return context;
@@ -93,7 +103,6 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
             }
             modelBuffer.clear();
         }
-
         if(errorBuffer.size() > 0) {
             for (int i = 0; i < observerList.size(); i++) {
                 ObserverInteractor observer = observerList.get(i);

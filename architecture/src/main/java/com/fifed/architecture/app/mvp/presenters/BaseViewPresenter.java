@@ -16,8 +16,8 @@ import java.lang.ref.WeakReference;
  * Created by Fedir on 04.07.2016.
  */
 public abstract class BaseViewPresenter implements Presenter, ObserverInteractor {
-   private ActivityView activityView;
-
+    private ActivityView activityView;
+    private ObserverState observerState = ObserverState.PASSIVE;
     public BaseViewPresenter(ActivityView activityView) {
         this.activityView = new WeakReference<>(activityView).get();
         registerAsObserver();
@@ -52,6 +52,22 @@ public abstract class BaseViewPresenter implements Presenter, ObserverInteractor
         getObservable().unregisterObserver(this);
     }
 
+    @Override
+    public void onStopActivity() {
+        observerState =  ObserverState.PASSIVE;
+    }
+
+    @Override
+    public void onStartActivity() {
+        observerState = ObserverState.ACTIVE;
+    }
+
     protected abstract InteractorActionInterface getActionInterface();
     protected abstract ObservableInteractor getObservable();
+
+
+    @Override
+    public ObserverState getObserverState() {
+        return observerState;
+    }
 }

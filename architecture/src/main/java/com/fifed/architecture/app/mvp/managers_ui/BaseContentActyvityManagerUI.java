@@ -234,5 +234,3 @@ public abstract class BaseContentActyvityManagerUI implements ManagerUIContentAc
     }
 
 }
-
-

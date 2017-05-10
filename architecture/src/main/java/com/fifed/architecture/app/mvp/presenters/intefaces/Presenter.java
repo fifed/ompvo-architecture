@@ -10,4 +10,10 @@ public interface Presenter {
     void onUserMadeAction(Action action);
     void notifyObserverIsDestroyed(String observerTag);
     void onPresenterDestroy();
+    void onStopActivity();
+    void onStartActivity();
+    ObserverState getObserverState();
+    enum ObserverState{
+        ACTIVE, PASSIVE
+    }
 }

@@ -1,21 +1,21 @@
 package com.fifed.architecture.datacontroller.interaction.fcm_pushes;
 
-import com.fifed.architecture.datacontroller.interaction.fcm_pushes.core.FcmPush;
+import android.os.Bundle;
 
-import java.util.Map;
+import com.fifed.architecture.datacontroller.interaction.fcm_pushes.core.FcmPush;
 
 
 /**
  * Created by Fedir on 10.07.2016.
  */
 public class FcmPushData implements FcmPush {
-    private Map<String, String> data;
+    private Bundle data;
 
-    public Map<String, String> getData() {
+    public Bundle getData() {
         return data;
     }
 
-    public FcmPushData setData(Map<String, String> data) {
+    public FcmPushData setData(Bundle data) {
         this.data = data;
         return this;
     }

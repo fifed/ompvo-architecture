@@ -158,8 +158,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements Obser
     }
     protected abstract View initUI(View v);
     protected abstract void setListeners();
-    protected abstract @StyleRes
-    int getWindowAnimStyle();
+    protected abstract @StyleRes int getWindowAnimStyle();
     protected  void onFragmentRegisteredAsObserver(){
 
     }
