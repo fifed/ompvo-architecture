@@ -63,8 +63,9 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
 
     @Override
     public void notifyObserversOnError(ErrorData errorData) {
-        if(errorData.getError() != null) {
-            Log.e(getContext().getApplicationInfo().name + " : ", errorData.getError().getMessage());
+        if(errorData.getError() != null && errorData.getError().getMessage() != null) {
+            Log.e(getContext().getApplicationInfo().name, errorData.getError().getClass().getSimpleName() +"  : " +
+                    errorData.getError().getMessage());
         }
         boolean containsActiveActivity = false;
         for (int i = 0; i < observerList.size(); i++) {
