@@ -1,6 +1,7 @@
 package com.fifed.architecture.datacontroller.interactor.core;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.fifed.architecture.app.mvp.presenters.intefaces.Presenter;
 import com.fifed.architecture.datacontroller.interaction.core.ErrorData;
@@ -62,6 +63,9 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
 
     @Override
     public void notifyObserversOnError(ErrorData errorData) {
+        if(errorData.getError() != null) {
+            Log.e(getContext().getApplicationInfo().name + " : ", errorData.getError().getMessage());
+        }
         boolean containsActiveActivity = false;
         for (int i = 0; i < observerList.size(); i++) {
             if(observerList.get(i) instanceof Presenter){
