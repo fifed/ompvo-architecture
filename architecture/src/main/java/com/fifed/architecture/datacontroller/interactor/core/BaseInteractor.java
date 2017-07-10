@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.fifed.architecture.app.mvp.presenters.intefaces.Presenter;
+import com.fifed.architecture.datacontroller.interaction.core.Action;
 import com.fifed.architecture.datacontroller.interaction.core.ErrorData;
 import com.fifed.architecture.datacontroller.interaction.core.Model;
 import com.fifed.architecture.datacontroller.interactor.core.interfaces.InteractorActionInterface;
@@ -21,6 +22,7 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
     private ArrayList<ObserverInteractor> observerList = new ArrayList<>();
     private List<Model> modelBuffer = new ArrayList<>();
     private List<ErrorData> errorBuffer = new ArrayList<>();
+    private List<Action> offlineActionQueue = new ArrayList<>();
     protected Context context;
 
 
@@ -47,7 +49,7 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
         for (int i = 0; i < observerList.size(); i++) {
             if(observerList.get(i) instanceof Presenter){
                 if(((Presenter)(observerList.get(i))).getObserverState() == Presenter.ObserverState.ACTIVE)
-                containsActiveActivity = true;
+                    containsActiveActivity = true;
                 break;
             }
         }
@@ -64,8 +66,9 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
     @Override
     public void notifyObserversOnError(ErrorData errorData) {
         if(errorData.getError() != null && errorData.getError().getMessage() != null) {
-            Log.e(getContext().getApplicationInfo().name, errorData.getError().getClass().getSimpleName() +"  : " +
+            Log.e("ErrorDataLog", errorData.getError().getClass().getSimpleName() +" : " +
                     errorData.getError().getMessage());
+            errorData.getError().printStackTrace();
         }
         boolean containsActiveActivity = false;
         for (int i = 0; i < observerList.size(); i++) {
@@ -119,5 +122,15 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
         }
     }
 
+    public void addActionToOfflineQueue(Action action){
+        offlineActionQueue.add(action);
+    }
+
+    public void runOfflineQueue(){
+        for (int i = 0; i < offlineActionQueue.size(); i++) {
+            onUserAction(offlineActionQueue.get(i));
+        }
+        offlineActionQueue.clear();
+    }
 }
 
