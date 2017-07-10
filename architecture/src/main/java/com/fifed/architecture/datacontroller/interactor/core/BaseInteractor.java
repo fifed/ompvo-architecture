@@ -65,11 +65,27 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
 
     @Override
     public void notifyObserversOnError(ErrorData errorData) {
-        if(errorData.getError() != null && errorData.getError().getMessage() != null) {
-            Log.e("ErrorDataLog", errorData.getError().getClass().getSimpleName() +" : " +
-                    errorData.getError().getMessage());
+        if(errorData.getError() != null) {
+            if(errorData.getError().getMessage() != null && errorData.getError().getMessage().length() > 1){
+                Log.e("ErrorDataLog", errorData.getError().getClass().getSimpleName() +" : " +
+                        errorData.getError().getMessage());
+            }
+            if(errorData.getError().getCause() != null) {
+                Log.e("ErrorDataLog", errorData.getError().getCause().getClass().getSimpleName() +" : " +
+                        errorData.getError().getCause().toString());
+            }
+            if(errorData.getError().getStackTrace() != null) {
+                StringBuilder builder = new StringBuilder();
+                StackTraceElement[] stack = errorData.getError().getStackTrace();
+                for (int i = 0; i < stack.length; i++) {
+                    builder.append(stack[i].toString());
+                    builder.append("\n");
+                }
+                Log.e("ErrorDataLog",  builder.toString());
+            }
             errorData.getError().printStackTrace();
         }
+
         boolean containsActiveActivity = false;
         for (int i = 0; i < observerList.size(); i++) {
             if(observerList.get(i) instanceof Presenter){
