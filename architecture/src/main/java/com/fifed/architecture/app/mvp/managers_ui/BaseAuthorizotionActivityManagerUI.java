@@ -17,8 +17,8 @@ public  abstract class BaseAuthorizotionActivityManagerUI extends BaseContentAct
     }
 
     @Override
-    public void startContentActivity(int userID, String key, Class<?> cls) {
-        getActivity().startActivity(new Intent(getActivity(), cls).putExtra(key, userID));
+    public void startContentActivity(Intent intent) {
+        getActivity().startActivity(intent);
         getActivity().finish();
         getActivity().overridePendingTransition(R.anim.fragment_animation_enter, R.anim.fragment_animation_exit);
     }

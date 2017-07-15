@@ -13,14 +13,8 @@ import com.fifed.architecture.app.mvp.managers_ui.interfaces.ManagerUIAuthActivi
 public abstract class BaseAuthorizationActivity extends BaseActivity implements AuthActivityFragmentsFeedbacks {
 
     @Override
-    public void startContentActivity(int userID, String key, Class<?> cls) {
-        getManagerUI().startContentActivity(userID, key, cls);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        getManagerUI().authorizationResult(requestCode, resultCode, data);
+    public void startContentActivity(Intent intent) {
+        getManagerUI().startContentActivity(intent);
     }
 
     @Override

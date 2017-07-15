@@ -23,7 +23,7 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
     private List<Model> modelBuffer = new ArrayList<>();
     private List<ErrorData> errorBuffer = new ArrayList<>();
     private List<Action> offlineActionQueue = new ArrayList<>();
-    protected Context context;
+    private Context context;
 
 
     protected BaseInteractor(Context context) {
@@ -49,7 +49,7 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
         for (int i = 0; i < observerList.size(); i++) {
             if(observerList.get(i) instanceof Presenter){
                 if(((Presenter)(observerList.get(i))).getObserverState() == Presenter.ObserverState.ACTIVE)
-                    containsActiveActivity = true;
+                containsActiveActivity = true;
                 break;
             }
         }
@@ -83,7 +83,6 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
                 }
                 Log.e("ErrorDataLog",  builder.toString());
             }
-            errorData.getError().printStackTrace();
         }
 
         boolean containsActiveActivity = false;
@@ -103,7 +102,6 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
             }
         }
     }
-
 
     public Context getContext() {
         return context;

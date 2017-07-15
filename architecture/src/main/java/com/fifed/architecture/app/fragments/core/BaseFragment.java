@@ -31,6 +31,8 @@ import com.fifed.architecture.app.constants.BaseFragmentIdentifier;
 import com.fifed.architecture.app.fragments.utils.FragmentAnimUtils;
 import com.fifed.architecture.app.observers.ObservebleActivity;
 import com.fifed.architecture.app.observers.ObserverActivity;
+import com.fifed.architecture.datacontroller.interaction.core.ErrorData;
+import com.fifed.architecture.datacontroller.interaction.core.Model;
 
 
 /**
@@ -100,13 +102,6 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
         onFragmentRegisteredAsObserver();
     }
 
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        hideKeyboard();
-    }
-
     @Override
     public void onDestroyView() {
         ((ObservebleActivity) getActivity()).unregisterObserver(this);
@@ -114,6 +109,7 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
         fromBackStack = true;
         lastFragment = getClass();
         super.onDestroyView();
+        hideKeyboard();
     }
 
     @Override
@@ -157,6 +153,21 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
         return ((InputMethodManager)getContext().getSystemService(Service.INPUT_METHOD_SERVICE)).isActive();
     }
 
+    @Override
+    public void onClick(View v) {
+
+    }
+
+    @Override
+    public void onPassiveObserveUpdateData(Model model) {
+
+    }
+
+    @Override
+    public void onPassiveObserveError(ErrorData errorData) {
+
+    }
+
 
     public String getCustomTAG() {
         return TAG;
@@ -184,7 +195,7 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
     }
     protected void initUI(View v){}
     protected void onBindingFinish(ViewDataBinding vb){}
-    protected abstract void setListeners();
+    protected  void setListeners(){}
     protected  void onFragmentRegisteredAsObserver(){
 
     }
@@ -251,7 +262,6 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
     protected boolean isAfterSaveInstanteState(){
         return ((ActivityStateInterface)getActivity()).isAfterSaveInstanceState();
     }
-
 
     public BaseFragment reloadedAsNewFragment(boolean reloadedAsNewFragment){
         this.reloadedAsNewFragment = reloadedAsNewFragment;
