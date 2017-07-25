@@ -8,4 +8,5 @@ import com.fifed.architecture.datacontroller.interaction.core.Action;
  */
 public interface ActivityActionInterface {
     void userMadeAction(Action action);
+    void preloadForAction(Action action);
 }

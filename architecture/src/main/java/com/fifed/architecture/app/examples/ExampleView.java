@@ -51,6 +51,11 @@ public class ExampleView extends View implements ObserverActivity {
     }
 
     @Override
+    public void onPreloadFinish(Action action) {
+
+    }
+
+    @Override
     public String getObserverTag() {
         return getClass().getSimpleName() + hashCode();
     }

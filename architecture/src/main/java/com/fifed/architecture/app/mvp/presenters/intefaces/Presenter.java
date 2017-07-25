@@ -9,6 +9,8 @@ import com.fifed.architecture.datacontroller.interaction.core.Action;
 public interface Presenter {
     void onUserMadeAction(Action action);
     void notifyObserverIsDestroyed(String observerTag);
+    void onPreloadAction(Action action);
+    void onPreloadFinished(Action action);
     void onPresenterDestroy();
     void onStopActivity();
     void onStartActivity();

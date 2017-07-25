@@ -31,6 +31,7 @@ import com.fifed.architecture.app.constants.BaseFragmentIdentifier;
 import com.fifed.architecture.app.fragments.utils.FragmentAnimUtils;
 import com.fifed.architecture.app.observers.ObservebleActivity;
 import com.fifed.architecture.app.observers.ObserverActivity;
+import com.fifed.architecture.datacontroller.interaction.core.Action;
 import com.fifed.architecture.datacontroller.interaction.core.ErrorData;
 import com.fifed.architecture.datacontroller.interaction.core.Model;
 
@@ -168,6 +169,10 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
 
     }
 
+    @Override
+    public void onPreloadFinish(Action action) {
+
+    }
 
     public String getCustomTAG() {
         return TAG;

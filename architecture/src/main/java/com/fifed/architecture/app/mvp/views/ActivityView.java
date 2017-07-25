@@ -1,6 +1,7 @@
 package com.fifed.architecture.app.mvp.views;
 
 
+import com.fifed.architecture.datacontroller.interaction.core.Action;
 import com.fifed.architecture.datacontroller.interaction.core.ErrorData;
 import com.fifed.architecture.datacontroller.interaction.core.Model;
 
@@ -10,4 +11,5 @@ import com.fifed.architecture.datacontroller.interaction.core.Model;
 public interface ActivityView {
     void onError(ErrorData errorData);
     void onUpdateData(Model model);
+    void onPreloadFinished(Action action);
 }

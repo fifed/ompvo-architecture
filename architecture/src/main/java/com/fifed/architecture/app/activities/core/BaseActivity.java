@@ -186,6 +186,22 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
     }
 
     @Override
+    public void onPreloadFinished(Action action) {
+        notifyObserversOnPreloadFinshed(action);
+    }
+
+    @Override
+    public void notifyObserversOnPreloadFinshed(Action action) {
+        for (int i = 0; i < observerList.size(); i++) {
+            ObserverActivity observer = observerList.get(i);
+            if (observer.getObserverTag().equals(action.getTAG())){
+                observer.onPreloadFinish(action);
+                break;
+            }
+        }
+    }
+
+    @Override
     public void notifyObserversOnUpdateData(Model model) {
         if(model.getAction().isSingleResponse()){
             for (int i = 0; i < observerList.size(); i++) {
@@ -229,19 +245,28 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
     }
 
     @Override
+    public void preloadForAction(Action action) {
+        presenter.onPreloadAction(action);
+    }
+
+    @Override
     public void notifyObserversOnError(ErrorData errorData) {
         if (errorData.getGlobalErrorMessage() != null) {
             handleErrorInActivity(errorData);
         }
         for (int i = 0; i < observerList.size(); i++) {
             ObserverActivity observer = observerList.get(i);
-            if (observer.getObserverTag().equals(errorData.getTAG())) observer.onError(errorData);
+            if (observer.getObserverTag().equals(errorData.getTAG())){
+                observer.onError(errorData);
+                break;
+            }
         }
 
         for (int i = 0; i < passiveObserverList.size(); i++) {
             ObserverActivity observer = passiveObserverList.get(i);
             if (!observerList.contains(observer) && observer.getObserverTag().equals(errorData.getTAG())){
                 observer.onPassiveObserveError(errorData);
+                break;
             }
         }
     }

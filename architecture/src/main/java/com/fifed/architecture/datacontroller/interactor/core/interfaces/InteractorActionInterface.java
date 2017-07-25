@@ -7,6 +7,7 @@ import com.fifed.architecture.datacontroller.interaction.core.Action;
  * Created by Fedir on 05.07.2016.
  */
 public interface InteractorActionInterface {
-    void onUserAction(Action action);
+    void sendUserAction(Action action);
+    void onPreloadAction(Action action);
     void onObserverIsDestroyed(String observerTag);
 }

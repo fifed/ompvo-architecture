@@ -23,9 +23,10 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
     private List<Model> modelBuffer = new ArrayList<>();
     private List<ErrorData> errorBuffer = new ArrayList<>();
     private List<Action> offlineActionQueue = new ArrayList<>();
+    private List<Model> preloadedModels = new ArrayList<>();
     private Context context;
 
-
+    public abstract void onUserAction(Action action);
     protected BaseInteractor(Context context) {
         this.context = context;
     }
@@ -41,6 +42,18 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
     @Override
     public void unregisterObserver(ObserverInteractor observer) {
         observerList.remove(observer);
+    }
+
+    @Override
+    public void sendUserAction(Action action) {
+        for (int i = 0; i < preloadedModels.size(); i++) {
+            if(preloadedModels.get(i) != null && action.getClass().getSimpleName().equals(preloadedModels.get(i).getAction().getClass().getSimpleName())){
+                notifyObserversOnUpdateData(preloadedModels.get(i));
+                preloadedModels.remove(i);
+                return;
+            }
+        }
+        onUserAction(action);
     }
 
     @Override
@@ -103,6 +116,14 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
         }
     }
 
+    @Override
+    public void notifyObserversOnPreloadFinished(final Model model) {
+        preloadedModels.add(model);
+        for (int i = 0; i < observerList.size(); i++) {
+            observerList.get(i).onPreloadFinished(model.getAction());
+        }
+    }
+
     public Context getContext() {
         return context;
     }
@@ -145,6 +166,10 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
             onUserAction(offlineActionQueue.get(i));
         }
         offlineActionQueue.clear();
+    }
+
+    public void clearPreloadedData(){
+        preloadedModels.clear();
     }
 }
 

@@ -30,6 +30,9 @@ import com.fifed.architecture.app.constants.BaseFragmentIdentifier;
 import com.fifed.architecture.app.observers.ObservebleActivity;
 import com.fifed.architecture.app.observers.ObserverActivity;
 import com.fifed.architecture.app.utils.ResourceHelper;
+import com.fifed.architecture.datacontroller.interaction.core.Action;
+import com.fifed.architecture.datacontroller.interaction.core.ErrorData;
+import com.fifed.architecture.datacontroller.interaction.core.Model;
 
 /**
  * Created by Fedir on 10.12.2016.
@@ -164,6 +167,21 @@ public abstract class BaseDialogFragment extends DialogFragment implements Obser
     }
     protected void onFragmentUnregisteredAsObserver(){
 
+    }
+
+    @Override
+    public void onPreloadFinish(Action action) {
+
+    }
+
+    @Override
+    public void onPassiveObserveError(ErrorData errorData) {
+
+    }
+
+    @Override
+    public void onPassiveObserveUpdateData(Model model) {
+        
     }
 
     protected ActivityContentInterface getContentInteface(){

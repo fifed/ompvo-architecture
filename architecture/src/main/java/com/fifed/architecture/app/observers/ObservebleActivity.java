@@ -1,6 +1,7 @@
 package com.fifed.architecture.app.observers;
 
 
+import com.fifed.architecture.datacontroller.interaction.core.Action;
 import com.fifed.architecture.datacontroller.interaction.core.ErrorData;
 import com.fifed.architecture.datacontroller.interaction.core.Model;
 
@@ -15,4 +16,5 @@ public interface ObservebleActivity {
     boolean notifyOnBackPressed();
     void notifyObserversOnUpdateData(Model model);
     void notifyObserversOnError(ErrorData errorData);
+    void notifyObserversOnPreloadFinshed(Action action);
 }
