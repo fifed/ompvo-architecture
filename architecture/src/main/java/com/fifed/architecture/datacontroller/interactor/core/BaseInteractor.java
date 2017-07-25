@@ -1,6 +1,8 @@
 package com.fifed.architecture.datacontroller.interactor.core;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.fifed.architecture.app.mvp.presenters.intefaces.Presenter;
@@ -24,6 +26,7 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
     private List<ErrorData> errorBuffer = new ArrayList<>();
     private List<Action> offlineActionQueue = new ArrayList<>();
     private List<Model> preloadedModels = new ArrayList<>();
+    private List<Model> staticCache = new ArrayList<>();
     private Context context;
 
     public abstract void onUserAction(Action action);
@@ -53,11 +56,20 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
                 return;
             }
         }
+        for (int i = 0; i < staticCache.size(); i++) {
+            if(action.getClass().getSimpleName().equals(staticCache.get(i).getClass().getSimpleName())){
+                notifyObserversOnUpdateData(staticCache.get(i));
+                return;
+            }
+        }
         onUserAction(action);
     }
 
     @Override
     public void notifyObserversOnUpdateData(Model model) {
+        if(model.getAction().isNeedStaticRAMCache()){
+            staticCache.add(model);
+        }
         boolean containsActiveActivity = false;
         for (int i = 0; i < observerList.size(); i++) {
             if(observerList.get(i) instanceof Presenter){
@@ -78,6 +90,7 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
 
     @Override
     public void notifyObserversOnError(ErrorData errorData) {
+        Log.e("ErrorDataLog",  errorData.getClass().getSimpleName());
         if(errorData.getError() != null) {
             if(errorData.getError().getMessage() != null && errorData.getError().getMessage().length() > 1){
                 Log.e("ErrorDataLog", errorData.getError().getClass().getSimpleName() +" : " +
@@ -118,10 +131,22 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
 
     @Override
     public void notifyObserversOnPreloadFinished(final Model model) {
+        if(model.getAction().isNeedStaticRAMCache()){
+            staticCache.add(model);
+        }
         preloadedModels.add(model);
         for (int i = 0; i < observerList.size(); i++) {
             observerList.get(i).onPreloadFinished(model.getAction());
         }
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(preloadedModels != null && preloadedModels.contains(model)){
+                    preloadedModels.remove(model);
+                }
+            }
+        }, 30);
     }
 
     public Context getContext() {
@@ -170,6 +195,10 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
 
     public void clearPreloadedData(){
         preloadedModels.clear();
+    }
+
+    public void clearStaticCashe(){
+        staticCache.clear();
     }
 }
 

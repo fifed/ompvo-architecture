@@ -6,6 +6,7 @@ package com.fifed.architecture.datacontroller.interaction.core;
 public abstract class Action {
     private String TAG;
     private boolean singleResponse;
+    private boolean needStaticRAMCache;
 
 
     public Action(String TAG) {
@@ -17,6 +18,12 @@ public abstract class Action {
         this.singleResponse = singleResponse;
     }
 
+    public Action(String TAG, boolean singleResponse, boolean needStaticRAMCache) {
+        this.TAG = TAG;
+        this.singleResponse = singleResponse;
+        this.needStaticRAMCache = needStaticRAMCache;
+    }
+
     public boolean isSingleResponse() {
         return singleResponse;
     }
@@ -25,4 +32,7 @@ public abstract class Action {
         return TAG;
     }
 
+    public boolean isNeedStaticRAMCache() {
+        return needStaticRAMCache;
+    }
 }
