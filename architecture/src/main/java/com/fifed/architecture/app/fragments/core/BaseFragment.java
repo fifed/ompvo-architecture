@@ -120,6 +120,7 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
         ((ObservebleActivity) getActivity()).removePassiveObservers(this);
     }
 
+    @CallSuper
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
         Animation animation;
