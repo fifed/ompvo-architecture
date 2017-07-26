@@ -68,6 +68,11 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
     @Override
     public void notifyObserversOnUpdateData(Model model) {
         if(model.getAction().isNeedStaticRAMCache()){
+            for (int i = 0; i < staticCache.size(); i++) {
+                if(model.getClass().getSimpleName().equals(staticCache.get(i).getClass().getSimpleName())){
+                    staticCache.remove(i);
+                }
+            }
             staticCache.add(model);
         }
         boolean containsActiveActivity = false;
@@ -132,9 +137,23 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
     @Override
     public void notifyObserversOnPreloadFinished(final Model model) {
         if(model.getAction().isNeedStaticRAMCache()){
+            for (int i = 0; i < staticCache.size(); i++) {
+                if(model.getClass().getSimpleName().equals(staticCache.get(i).getClass().getSimpleName())){
+                    staticCache.remove(i);
+                    break;
+                }
+            }
             staticCache.add(model);
         }
+
+        for (int i = 0; i < preloadedModels.size(); i++) {
+            if(model.getClass().getSimpleName().equals(preloadedModels.get(i).getClass().getSimpleName())){
+                preloadedModels.remove(i);
+                break;
+            }
+        }
         preloadedModels.add(model);
+
         for (int i = 0; i < observerList.size(); i++) {
             observerList.get(i).onPreloadFinished(model.getAction());
         }
@@ -197,8 +216,49 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
         preloadedModels.clear();
     }
 
+    public void removePreloadedDataWhereActions(Class<? extends Action> ... actionCls){
+        for (Class c : actionCls) {
+            for (int i = 0; i < preloadedModels.size(); i++) {
+                if(c.getSimpleName().equals(preloadedModels.get(i).getAction().getClass().getSimpleName())){
+                    preloadedModels.remove(i);
+                }
+            }
+        }
+    }
+
+    public void removePreloadedDataWhereModels(Class<? extends Model> ... modelCls){
+        for (Class c : modelCls) {
+            for (int i = 0; i < preloadedModels.size(); i++) {
+                if(c.getSimpleName().equals(preloadedModels.get(i).getClass().getSimpleName())){
+                    preloadedModels.remove(i);
+                }
+            }
+        }
+    }
+
     public void clearStaticCashe(){
         staticCache.clear();
+    }
+
+
+    public void removeStaticCasheWhereActions(Class<? extends Action> ... actionCls){
+        for (Class c : actionCls) {
+            for (int i = 0; i < staticCache.size(); i++) {
+                if(c.getSimpleName().equals(staticCache.get(i).getAction().getClass().getSimpleName())){
+                    staticCache.remove(i);
+                }
+            }
+        }
+    }
+
+    public void removeStaticCasheWhereModels(Class<? extends Model> ... modelCls){
+        for (Class c : modelCls) {
+            for (int i = 0; i < staticCache.size(); i++) {
+                if(c.getSimpleName().equals(staticCache.get(i).getClass().getSimpleName())){
+                    staticCache.remove(i);
+                }
+            }
+        }
     }
 }
 
