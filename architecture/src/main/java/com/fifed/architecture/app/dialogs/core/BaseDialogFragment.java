@@ -119,7 +119,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements Obser
         Dialog dialog = new Dialog(getActivity(), android.R.style.Theme){
             @Override
             public void onBackPressed() {
-                if(!BaseDialogFragment.this.onBackPressed()){
+                if(!BaseDialogFragment.this.handleOnBackPressed()){
                     dismiss();
                 }
             }

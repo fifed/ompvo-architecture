@@ -168,7 +168,7 @@ public abstract class BaseWindow implements ObserverActivity {
     }
 
     @Override
-    public boolean onBackPressed(){
+    public boolean handleOnBackPressed(){
         if(windowShowing) {
             close();
             return true;

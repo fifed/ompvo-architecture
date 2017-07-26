@@ -170,7 +170,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
         boolean fragmentGotInvoke = false;
         for (int i = 0; i < observerList.size(); i++) {
             ObserverActivity observer = observerList.get(i);
-            if (fragmentGotInvoke = observer.onBackPressed()) break;
+            if (fragmentGotInvoke = observer.handleOnBackPressed()) break;
         }
         return fragmentGotInvoke;
     }

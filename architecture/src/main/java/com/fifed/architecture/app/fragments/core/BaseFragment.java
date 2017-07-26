@@ -47,6 +47,7 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
     private static Class<? extends Fragment> lastFragment;
     private final String OUT_STATE_DATA = "outStateData";
     private Bundle outStateData;
+    private boolean isExecuteAnim;
 
     @Nullable
     @Override
@@ -138,12 +139,40 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
                     }
                 }, animation.getDuration());
             }
+        } else if(nextAnim != 0){
+            animation = AnimationUtils.loadAnimation(getActivity(), nextAnim);
         } else {
             animation = super.onCreateAnimation(transit, enter, nextAnim);
+        }
+        if(animation != null){
+            animation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                    isExecuteAnim = true;
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    isExecuteAnim = false;
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
         }
         return animation;
     }
 
+    @Override
+    public final boolean handleOnBackPressed() {
+        return isExecuteAnim || onBackPressed();
+    }
+
+    public boolean onBackPressed(){
+        return false;
+    }
 
     protected void hideKeyboard(){
         ((InputMethodManager)getContext().getSystemService(Service.INPUT_METHOD_SERVICE)).

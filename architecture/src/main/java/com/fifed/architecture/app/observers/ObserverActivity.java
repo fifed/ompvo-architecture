@@ -10,7 +10,7 @@ import com.fifed.architecture.datacontroller.interaction.core.Model;
  */
 public interface ObserverActivity {
 
-    boolean onBackPressed();
+    boolean handleOnBackPressed();
 
     void onUpdateData(Model model);
 

@@ -26,7 +26,7 @@ public class ExampleView extends View implements ObserverActivity {
 
 
     @Override
-    public boolean onBackPressed() {
+    public boolean handleOnBackPressed() {
         return false;
     }
 
