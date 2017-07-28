@@ -54,7 +54,7 @@ public abstract class BaseViewPresenter implements Presenter, ObserverInteractor
 
     @Override
     public void onPreloadAction(Action action) {
-        getActionInterface().onPreloadAction(action);
+        getActionInterface().sendPreloadAction(action);
     }
 
     @Override

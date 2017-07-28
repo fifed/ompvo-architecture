@@ -194,7 +194,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
     public void notifyObserversOnPreloadFinshed(Action action) {
         for (int i = 0; i < observerList.size(); i++) {
             ObserverActivity observer = observerList.get(i);
-            if (observer.getObserverTag().equals(action.getTAG())){
+            if (observer.getObserverTag().equals(action.getObserverTag())){
                 observer.onPreloadFinish(action);
                 break;
             }
@@ -206,7 +206,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
         if(model.getAction().isSingleResponse()){
             for (int i = 0; i < observerList.size(); i++) {
                 ObserverActivity observer = observerList.get(i);
-                if (observer.getObserverTag().equals(model.getAction().getTAG())) {
+                if (observer.getObserverTag().equals(model.getAction().getObserverTag())) {
                     observer.onUpdateData(model);
                     break;
                 }
@@ -214,7 +214,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
             for (int i = 0; i < passiveObserverList.size(); i++) {
                 ObserverActivity observer = passiveObserverList.get(i);
                 if(!observerList.contains(observer)) {
-                    if (observer.getObserverTag().equals(model.getAction().getTAG())) {
+                    if (observer.getObserverTag().equals(model.getAction().getObserverTag())) {
                         observer.onPassiveObserveUpdateData(model);
                         break;
                     }
@@ -256,7 +256,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
         }
         for (int i = 0; i < observerList.size(); i++) {
             ObserverActivity observer = observerList.get(i);
-            if (observer.getObserverTag().equals(errorData.getTAG())){
+            if (observer.getObserverTag().equals(errorData.getAction().getObserverTag())){
                 observer.onError(errorData);
                 break;
             }
@@ -264,7 +264,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
 
         for (int i = 0; i < passiveObserverList.size(); i++) {
             ObserverActivity observer = passiveObserverList.get(i);
-            if (!observerList.contains(observer) && observer.getObserverTag().equals(errorData.getTAG())){
+            if (!observerList.contains(observer) && observer.getObserverTag().equals(errorData.getAction().getObserverTag())){
                 observer.onPassiveObserveError(errorData);
                 break;
             }

@@ -4,22 +4,22 @@ package com.fifed.architecture.datacontroller.interaction.core;
  * Created by Fedir on 05.07.2016.
  */
 public abstract class Action {
-    private String TAG;
+    private String observerTag;
     private boolean singleResponse;
     private boolean needStaticRAMCache;
 
 
-    public Action(String TAG) {
-        this.TAG = TAG;
+    public Action(String observerTag) {
+        this.observerTag = observerTag;
     }
 
-    public Action (String TAG, boolean singleResponse){
-        this.TAG = TAG;
+    public Action (String observerTag, boolean singleResponse){
+        this.observerTag = observerTag;
         this.singleResponse = singleResponse;
     }
 
-    public Action(String TAG, boolean singleResponse, boolean needStaticRAMCache) {
-        this.TAG = TAG;
+    public Action(String observerTag, boolean singleResponse, boolean needStaticRAMCache) {
+        this.observerTag = observerTag;
         this.singleResponse = singleResponse;
         this.needStaticRAMCache = needStaticRAMCache;
     }
@@ -28,8 +28,8 @@ public abstract class Action {
         return singleResponse;
     }
 
-    public String getTAG() {
-        return TAG;
+    public String getObserverTag() {
+        return observerTag;
     }
 
     public boolean isNeedStaticRAMCache() {

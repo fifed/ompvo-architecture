@@ -14,4 +14,8 @@ public abstract class Model {
     public Action getAction() {
         return action;
     }
+
+    public void setAction(Action action) {
+        this.action = action;
+    }
 }

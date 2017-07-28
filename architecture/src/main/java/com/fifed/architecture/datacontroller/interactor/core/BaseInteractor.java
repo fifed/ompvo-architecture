@@ -21,17 +21,22 @@ import java.util.List;
  * Created by Fedir on 05.07.2016.
  */
 public abstract class BaseInteractor implements ObservableInteractor, InteractorActionInterface {
+    private long MAX_PRELOAD_WAII_TIME = 500;
+    private Handler handler;
     private ArrayList<ObserverInteractor> observerList = new ArrayList<>();
     private List<Model> modelBuffer = new ArrayList<>();
     private List<ErrorData> errorBuffer = new ArrayList<>();
+    private List<Action> preloadActionQueue = new ArrayList<>();
     private List<Action> offlineActionQueue = new ArrayList<>();
     private List<Model> preloadedModels = new ArrayList<>();
     private List<Model> staticCache = new ArrayList<>();
     private Context context;
 
     public abstract void onUserAction(Action action);
+
     protected BaseInteractor(Context context) {
         this.context = context;
+        handler = new Handler(Looper.getMainLooper());
     }
 
     @Override
@@ -51,6 +56,7 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
     public void sendUserAction(Action action) {
         for (int i = 0; i < preloadedModels.size(); i++) {
             if(preloadedModels.get(i) != null && action.getClass().getSimpleName().equals(preloadedModels.get(i).getAction().getClass().getSimpleName())){
+                preloadedModels.get(i).setAction(action);
                 notifyObserversOnUpdateData(preloadedModels.get(i));
                 preloadedModels.remove(i);
                 return;
@@ -62,39 +68,104 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
                 return;
             }
         }
-        onUserAction(action);
-    }
 
-    @Override
-    public void notifyObserversOnUpdateData(Model model) {
-        if(model.getAction().isNeedStaticRAMCache()){
-            for (int i = 0; i < staticCache.size(); i++) {
-                if(model.getClass().getSimpleName().equals(staticCache.get(i).getClass().getSimpleName())){
-                    staticCache.remove(i);
-                }
-            }
-            staticCache.add(model);
-        }
-        boolean containsActiveActivity = false;
-        for (int i = 0; i < observerList.size(); i++) {
-            if(observerList.get(i) instanceof Presenter){
-                if(((Presenter)(observerList.get(i))).getObserverState() == Presenter.ObserverState.ACTIVE)
-                containsActiveActivity = true;
+        boolean containsAction = false;
+        for (int i = 0; i < preloadActionQueue.size(); i++) {
+            if(preloadActionQueue.get(i) != null && action.getClass().getSimpleName().equals(preloadActionQueue.get(i).getClass().getSimpleName())){
+                containsAction = true;
                 break;
             }
         }
-        if(observerList.size() == 0 || !containsActiveActivity){
-            writeBufferModel(model);
-        } else {
+        if(!containsAction){
+            onUserAction(action);
+        }
+
+    }
+
+    @Override
+    public void sendPreloadAction(final Action action) {
+        boolean containsAction = false;
+        for (int i = 0; i < preloadActionQueue.size(); i++) {
+            if(preloadActionQueue.get(i) != null && action.getClass().getSimpleName().equals(preloadActionQueue.get(i).getClass().getSimpleName())){
+               containsAction = true;
+                break;
+            }
+        }
+        if(!containsAction){
+            preloadActionQueue.add(action);
+            onUserAction(action);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(preloadActionQueue != null && preloadActionQueue.contains(action)) {
+                        for (int i = 0; i < observerList.size(); i++) {
+                            observerList.get(i).onPreloadFinished(action);
+                        }
+                    }
+                }
+            }, MAX_PRELOAD_WAII_TIME);
+        }
+    }
+
+    @Override
+    public void notifyObserversOnUpdateData(final Model model) {
+        boolean isInPreloadQueue = false;
+        for (int i = 0; i < preloadActionQueue.size(); i++) {
+                if(preloadActionQueue != null && preloadActionQueue.contains(model.getAction())){
+                    preloadActionQueue.remove(model.getAction());
+                    isInPreloadQueue = true;
+                }
+        }
+        if(isInPreloadQueue){
+            for (int i = 0; i < preloadedModels.size(); i++) {
+                if(model.getClass().getSimpleName().equals(preloadedModels.get(i).getClass().getSimpleName())){
+                    preloadedModels.remove(i);
+                }
+            }
+            preloadedModels.add(model);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(preloadedModels != null && preloadedModels.contains(model)){
+                        preloadedModels.remove(model);
+                    }
+                }
+            }, 1000);
+
             for (int i = 0; i < observerList.size(); i++) {
-                ObserverInteractor observer = observerList.get(i);
-                observer.onUpdateData(model);
+                observerList.get(i).onPreloadFinished(model.getAction());
+            }
+
+        } else {
+            if (model.getAction().isNeedStaticRAMCache()) {
+                for (int i = 0; i < staticCache.size(); i++) {
+                    if (model.getClass().getSimpleName().equals(staticCache.get(i).getClass().getSimpleName())) {
+                        staticCache.remove(i);
+                    }
+                }
+                staticCache.add(model);
+            }
+            boolean containsActiveActivity = false;
+            for (int i = 0; i < observerList.size(); i++) {
+                if (observerList.get(i) instanceof Presenter) {
+                    if (((Presenter) (observerList.get(i))).getObserverState() == Presenter.ObserverState.ACTIVE)
+                        containsActiveActivity = true;
+                    break;
+                }
+            }
+            if (observerList.size() == 0 || !containsActiveActivity) {
+                writeBufferModel(model);
+            } else {
+                for (int i = 0; i < observerList.size(); i++) {
+                    ObserverInteractor observer = observerList.get(i);
+                    observer.onUpdateData(model);
+                }
             }
         }
     }
 
     @Override
-    public void notifyObserversOnError(ErrorData errorData) {
+    public void notifyObserversOnError(final ErrorData errorData) {
         Log.e("ErrorDataLog",  errorData.getClass().getSimpleName());
         if(errorData.getError() != null) {
             if(errorData.getError().getMessage() != null && errorData.getError().getMessage().length() > 1){
@@ -132,40 +203,14 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
                 observer.onError(errorData);
             }
         }
-    }
 
-    @Override
-    public void notifyObserversOnPreloadFinished(final Model model) {
-        if(model.getAction().isNeedStaticRAMCache()){
-            for (int i = 0; i < staticCache.size(); i++) {
-                if(model.getClass().getSimpleName().equals(staticCache.get(i).getClass().getSimpleName())){
-                    staticCache.remove(i);
-                    break;
+        for (int i = 0; i < preloadActionQueue.size(); i++) {
+            if(preloadActionQueue.get(i) != null && errorData.getAction().getClass().getSimpleName().equals(preloadActionQueue.get(i).getClass().getSimpleName())){
+                if(preloadActionQueue != null && preloadActionQueue.contains(errorData.getAction())){
+                    preloadActionQueue.remove(errorData.getAction());
                 }
             }
-            staticCache.add(model);
         }
-
-        for (int i = 0; i < preloadedModels.size(); i++) {
-            if(model.getClass().getSimpleName().equals(preloadedModels.get(i).getClass().getSimpleName())){
-                preloadedModels.remove(i);
-                break;
-            }
-        }
-        preloadedModels.add(model);
-
-        for (int i = 0; i < observerList.size(); i++) {
-            observerList.get(i).onPreloadFinished(model.getAction());
-        }
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(preloadedModels != null && preloadedModels.contains(model)){
-                    preloadedModels.remove(model);
-                }
-            }
-        }, 30);
     }
 
     public Context getContext() {
@@ -259,6 +304,10 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
                 }
             }
         }
+    }
+
+    public void setMaxPreloadWaitTime(long maxPreloadWaitTime) {
+        this.MAX_PRELOAD_WAII_TIME = maxPreloadWaitTime;
     }
 }
 

@@ -12,5 +12,4 @@ public interface ObservableInteractor {
     void unregisterObserver(ObserverInteractor observer);
     void notifyObserversOnUpdateData(Model model);
     void notifyObserversOnError(ErrorData errorData);
-    void notifyObserversOnPreloadFinished(Model model);
 }
