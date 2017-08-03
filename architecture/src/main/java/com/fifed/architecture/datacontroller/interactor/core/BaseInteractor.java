@@ -57,7 +57,9 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
         for (int i = 0; i < preloadedModels.size(); i++) {
             if(preloadedModels.get(i) != null && action.getClass().getSimpleName().equals(preloadedModels.get(i).getAction().getClass().getSimpleName())){
                 preloadedModels.get(i).setAction(action);
-                notifyObserversOnUpdateData(preloadedModels.get(i));
+                for (int j = 0; j < observerList.size(); j++) {
+                    observerList.get(j).onUpdateData(preloadedModels.get(i));
+                }
                 preloadedModels.remove(i);
                 return;
             }
