@@ -283,6 +283,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
     }
 
     @Override
+    public void onInternetConnectionStateChanged(boolean isConnected) {
+        for (int i = 0; i < observerList.size(); i++) {
+            observerList.get(i).onInternetConnectionStateChanged(isConnected);
+        }
+    }
+
+    @Override
     public void changeFragmentTo(BaseFragmentIdentifier fragmentsID, @Nullable Bundle bundle) {
         managerUI.changeFragmentTo(fragmentsID, bundle);
     }

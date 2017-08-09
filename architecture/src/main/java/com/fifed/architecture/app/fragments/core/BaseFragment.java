@@ -175,6 +175,11 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
         return false;
     }
 
+    @Override
+    public void onInternetConnectionStateChanged(boolean isConnected) {
+
+    }
+
     protected void hideKeyboard(){
         ((InputMethodManager)getContext().getSystemService(Service.INPUT_METHOD_SERVICE)).
                 hideSoftInputFromWindow(getActivity().findViewById(android.R.id.content).getWindowToken(), 0);

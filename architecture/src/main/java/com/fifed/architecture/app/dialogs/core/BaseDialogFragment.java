@@ -112,6 +112,10 @@ public abstract class BaseDialogFragment extends DialogFragment implements Obser
         super.onDestroyView();
     }
 
+    @Override
+    public void onInternetConnectionStateChanged(boolean isConnected) {
+
+    }
 
     @NonNull
     @Override

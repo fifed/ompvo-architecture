@@ -56,6 +56,11 @@ public class ExampleView extends View implements ObserverActivity {
     }
 
     @Override
+    public void onInternetConnectionStateChanged(boolean isConnected) {
+
+    }
+
+    @Override
     public String getObserverTag() {
         return getClass().getSimpleName() + hashCode();
     }

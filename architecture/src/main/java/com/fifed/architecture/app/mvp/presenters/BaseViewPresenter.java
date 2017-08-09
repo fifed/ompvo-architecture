@@ -58,6 +58,11 @@ public abstract class BaseViewPresenter implements Presenter, ObserverInteractor
     }
 
     @Override
+    public void onInternetConnectionStateChanged(boolean isConnected) {
+        activityView.onInternetConnectionStateChanged(isConnected);
+    }
+
+    @Override
     public  void onPresenterDestroy(){
         getObservable().unregisterObserver(this);
     }

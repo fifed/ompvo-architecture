@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 
 import com.fifed.architecture.app.activities.core.BaseActivity;
 import com.fifed.architecture.app.observers.ObserverActivity;
+import com.fifed.architecture.datacontroller.interaction.core.ErrorData;
+import com.fifed.architecture.datacontroller.interaction.core.Model;
 
 import java.lang.ref.WeakReference;
 
@@ -30,6 +32,21 @@ public abstract class InflatedViewController implements ObserverActivity, View.O
         this.activity = new WeakReference<>(activity).get();
         this.containerID = containerID;
         initView();
+    }
+
+    @Override
+    public void onInternetConnectionStateChanged(boolean isConnected) {
+
+    }
+
+    @Override
+    public void onPassiveObserveError(ErrorData errorData) {
+
+    }
+
+    @Override
+    public void onPassiveObserveUpdateData(Model model) {
+
     }
 
 

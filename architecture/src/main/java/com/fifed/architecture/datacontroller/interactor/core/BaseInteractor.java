@@ -12,9 +12,12 @@ import com.fifed.architecture.datacontroller.interaction.core.Model;
 import com.fifed.architecture.datacontroller.interactor.core.interfaces.InteractorActionInterface;
 import com.fifed.architecture.datacontroller.interactor.observer.interfaces.ObservableInteractor;
 import com.fifed.architecture.datacontroller.interactor.observer.interfaces.ObserverInteractor;
+import com.fifed.architecture.datacontroller.interactor.utils.InternetConnectionObserver;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.fifed.architecture.datacontroller.interactor.utils.InternetConnectionObserver.*;
 
 
 /**
@@ -33,10 +36,38 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
     private Context context;
 
     public abstract void onUserAction(Action action);
+    protected void onInternetConnectionStateChanged(ConnectionState state){}
+    protected void onInternetConnectionStateChanged(boolean isConnected){}
 
     protected BaseInteractor(Context context) {
         this.context = context;
         handler = new Handler(Looper.getMainLooper());
+        initInternetConnectionObserver();
+    }
+
+    private void initInternetConnectionObserver(){
+        new InternetConnectionObserver(context, new ConnectionListener() {
+            @Override
+            public void onConnectionStateChanged(ConnectionState state) {
+                onInternetConnectionStateChanged(state);
+                boolean isConnected = false;
+                switch (state){
+                    case WIFI_CONNECTED:
+                        isConnected = true;
+                        break;
+                    case MOBILE_NETWORK_CONNECTED:
+                        isConnected = true;
+                        break;
+                    case DISCONNECTED:
+                        isConnected = false;
+                        break;
+                }
+                onInternetConnectionStateChanged(isConnected);
+                for (int i = 0; i < observerList.size(); i++) {
+                    observerList.get(i).onInternetConnectionStateChanged(isConnected);
+                }
+            }
+        });
     }
 
     @Override

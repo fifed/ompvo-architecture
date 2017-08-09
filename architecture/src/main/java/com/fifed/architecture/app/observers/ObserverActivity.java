@@ -22,5 +22,7 @@ public interface ObserverActivity {
 
     void onPreloadFinish(Action action);
 
+    void onInternetConnectionStateChanged(boolean isConnected);
+
     String getObserverTag();
 }

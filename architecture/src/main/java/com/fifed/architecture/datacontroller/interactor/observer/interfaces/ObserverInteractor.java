@@ -13,4 +13,6 @@ public interface ObserverInteractor {
     void onError(ErrorData errorData);
 
     void onPreloadFinished(Action action);
+
+    void onInternetConnectionStateChanged(boolean isConnected);
 }

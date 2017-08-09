@@ -12,4 +12,5 @@ public interface ActivityView {
     void onError(ErrorData errorData);
     void onUpdateData(Model model);
     void onPreloadFinished(Action action);
+    void onInternetConnectionStateChanged(boolean isConnected);
 }
