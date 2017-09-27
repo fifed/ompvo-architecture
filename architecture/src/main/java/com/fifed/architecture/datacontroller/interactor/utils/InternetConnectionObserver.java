@@ -10,7 +10,7 @@ import static com.fifed.architecture.datacontroller.interactor.utils.InternetCon
 import static com.fifed.architecture.datacontroller.interactor.utils.InternetConnectionObserver.ConnectionState.WIFI_CONNECTED;
 import static com.fifed.architecture.datacontroller.interactor.utils.NetworkUtil.NETWORK_STATUS_MOBILE;
 import static com.fifed.architecture.datacontroller.interactor.utils.NetworkUtil.NETWORK_STATUS_NOT_CONNECTED;
-import static com.fifed.architecture.datacontroller.interactor.utils.NetworkUtil.NETWORK_STAUS_WIFI;
+import static com.fifed.architecture.datacontroller.interactor.utils.NetworkUtil.NETWORK_STATUS_WIFI;
 import static com.fifed.architecture.datacontroller.interactor.utils.NetworkUtil.getConnectivityStatusString;
 
 /**
@@ -47,7 +47,7 @@ public class InternetConnectionObserver {
                         case NETWORK_STATUS_MOBILE:
                             listener.onConnectionStateChanged(MOBILE_NETWORK_CONNECTED);
                             break;
-                        case NETWORK_STAUS_WIFI:
+                        case NETWORK_STATUS_WIFI:
                             listener.onConnectionStateChanged(WIFI_CONNECTED);
                             break;
                         case NETWORK_STATUS_NOT_CONNECTED:
