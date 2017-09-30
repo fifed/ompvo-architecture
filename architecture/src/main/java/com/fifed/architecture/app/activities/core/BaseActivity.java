@@ -130,7 +130,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
     }
 
     protected void doubleBackPressed() {
-        if (!isClickedBackPressed && getSupportFragmentManager().getBackStackEntryCount() == 0) {
+        if(getExitWithDoubleClickText() == 0){
+            super.onBackPressed();
+        } else if (!isClickedBackPressed && getSupportFragmentManager().getBackStackEntryCount() == 0) {
             showInformationForUser(rootView, getString(getExitWithDoubleClickText()), getSnakbarTextColor(), getSnakbarBackgroundColor());
             isClickedBackPressed = true;
             rootView.postDelayed(new Runnable() {
@@ -142,7 +144,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
         } else super.onBackPressed();
     }
     @StringRes
-    public abstract int getExitWithDoubleClickText();
+    public  int getExitWithDoubleClickText(){
+        return 0;
+    }
 
     protected @ColorInt int getSnakbarBackgroundColor() {
         return DEF_COLOR;
