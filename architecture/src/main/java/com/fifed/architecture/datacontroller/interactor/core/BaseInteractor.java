@@ -181,13 +181,20 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
             boolean containsActiveActivity = false;
             for (int i = 0; i < observerList.size(); i++) {
                 if (observerList.get(i) instanceof Presenter) {
-                    if (((Presenter) (observerList.get(i))).getObserverState() == Presenter.ObserverState.ACTIVE)
+                    if (observerList.get(i) instanceof Presenter) {
                         containsActiveActivity = true;
-                    break;
+                        break;
+                    }
                 }
             }
-            if (observerList.size() == 0 || !containsActiveActivity) {
+            if (!containsActiveActivity) {
                 writeBufferModel(model);
+                if(observerList.size() > 0){
+                    for (int i = 0; i < observerList.size(); i++) {
+                        ObserverInteractor observer = observerList.get(i);
+                        observer.onUpdateData(model);
+                    }
+                }
             } else {
                 for (int i = 0; i < observerList.size(); i++) {
                     ObserverInteractor observer = observerList.get(i);
@@ -223,13 +230,19 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
         boolean containsActiveActivity = false;
         for (int i = 0; i < observerList.size(); i++) {
             if(observerList.get(i) instanceof Presenter){
-                if(((Presenter)(observerList.get(i))).getObserverState() == Presenter.ObserverState.ACTIVE)
+                if((observerList.get(i)) instanceof Presenter)
                     containsActiveActivity = true;
                 break;
             }
         }
-        if(observerList.size() == 0 || !containsActiveActivity){
+        if(!containsActiveActivity){
             writeBufferError(errorData);
+            if(observerList.size() > 0){
+                for (int i = 0; i < observerList.size(); i++) {
+                    ObserverInteractor observer = observerList.get(i);
+                    observer.onError(errorData);
+                }
+            }
         } else {
             for (int i = 0; i < observerList.size(); i++) {
                 ObserverInteractor observer = observerList.get(i);

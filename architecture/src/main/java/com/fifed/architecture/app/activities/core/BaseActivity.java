@@ -94,18 +94,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
     public abstract BaseViewPresenter getViewPresenter();
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        presenter.onStartActivity();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        presenter.onStopActivity();
-    }
-
-    @Override
     protected void onDestroy() {
         if(presenter !=  null) {
             presenter.onPresenterDestroy();

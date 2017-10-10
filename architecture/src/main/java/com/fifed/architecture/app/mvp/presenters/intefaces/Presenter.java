@@ -12,10 +12,5 @@ public interface Presenter {
     void onPreloadAction(Action action);
     void onPreloadFinished(Action action);
     void onPresenterDestroy();
-    void onStopActivity();
-    void onStartActivity();
-    ObserverState getObserverState();
-    enum ObserverState{
-        ACTIVE, PASSIVE
-    }
+
 }
