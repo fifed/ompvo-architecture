@@ -1,5 +1,6 @@
 package com.fifed.architecture.app.mvp.presenters;
 
+import com.fifed.architecture.app.application.core.BaseApp;
 import com.fifed.architecture.app.mvp.presenters.intefaces.Presenter;
 import com.fifed.architecture.app.mvp.views.ActivityView;
 import com.fifed.architecture.datacontroller.interaction.core.Action;
@@ -68,7 +69,12 @@ public abstract class BaseViewPresenter implements Presenter, ObserverInteractor
     }
 
 
-    protected abstract InteractorActionInterface getActionInterface();
-    protected abstract ObservableInteractor getObservable();
+
+    private   InteractorActionInterface getActionInterface(){
+        return BaseApp.getActionInterface();
+    }
+    private ObservableInteractor getObservable(){
+        return BaseApp.getObservable();
+    }
 
 }
