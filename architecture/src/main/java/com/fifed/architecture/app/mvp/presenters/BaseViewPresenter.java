@@ -69,7 +69,6 @@ public abstract class BaseViewPresenter implements Presenter, ObserverInteractor
     }
 
 
-
     private   InteractorActionInterface getActionInterface(){
         return BaseApp.getActionInterface();
     }

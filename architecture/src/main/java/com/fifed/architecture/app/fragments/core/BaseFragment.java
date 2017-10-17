@@ -27,7 +27,7 @@ import com.fifed.architecture.app.activities.interfaces.ActivityActionInterface;
 import com.fifed.architecture.app.activities.interfaces.ActivityContentInterface;
 import com.fifed.architecture.app.activities.interfaces.ActivityStateInterface;
 import com.fifed.architecture.app.activities.interfaces.feedback_interfaces.core.FragmentFeedBackInterface;
-import com.fifed.architecture.app.constants.BaseFragmentIdentifier;
+import com.fifed.architecture.app.constants.FragmentData;
 import com.fifed.architecture.app.fragments.utils.FragmentAnimUtils;
 import com.fifed.architecture.app.observers.ObservebleActivity;
 import com.fifed.architecture.app.observers.ObserverActivity;
@@ -217,14 +217,14 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
         return (FragmentFeedBackInterface) getActivity();
     }
 
-    protected void changeFragmentTo(final BaseFragmentIdentifier fragmentsID, @Nullable final Bundle bundle){
+    protected void changeFragmentTo(final FragmentData data){
         if(getFragmentFeedBackInterface() != null && !isAfterSaveInstanteState()){
-            getFragmentFeedBackInterface().changeFragmentTo(fragmentsID, bundle);
+            getFragmentFeedBackInterface().changeFragmentTo(data);
         } else if(getFragmentFeedBackInterface() != null){
             new Handler(getActivity().getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    changeFragmentTo(fragmentsID, bundle);
+                    changeFragmentTo(data);
                 }
             }, 500);
         }

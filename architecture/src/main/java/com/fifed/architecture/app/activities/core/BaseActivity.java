@@ -16,7 +16,7 @@ import com.fifed.architecture.app.activities.interfaces.ActivityActionInterface;
 import com.fifed.architecture.app.activities.interfaces.ActivityContentInterface;
 import com.fifed.architecture.app.activities.interfaces.ActivityStateInterface;
 import com.fifed.architecture.app.activities.interfaces.feedback_interfaces.core.FragmentFeedBackInterface;
-import com.fifed.architecture.app.constants.BaseFragmentIdentifier;
+import com.fifed.architecture.app.constants.FragmentData;
 import com.fifed.architecture.app.mvp.managers_ui.interfaces.core.ManagerUI;
 import com.fifed.architecture.app.mvp.presenters.BaseViewPresenter;
 import com.fifed.architecture.app.mvp.presenters.intefaces.Presenter;
@@ -282,8 +282,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
     }
 
     @Override
-    public void changeFragmentTo(BaseFragmentIdentifier fragmentsID, @Nullable Bundle bundle) {
-        managerUI.changeFragmentTo(fragmentsID, bundle);
+    public void changeFragmentTo(FragmentData data) {
+        managerUI.changeFragmentTo(data);
     }
 
     protected void handleErrorInActivity(ErrorData errorData) {

@@ -1,9 +1,6 @@
 package com.fifed.architecture.app.activities.interfaces.feedback_interfaces.core;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-
-import com.fifed.architecture.app.constants.BaseFragmentIdentifier;
+import com.fifed.architecture.app.constants.FragmentData;
 import com.fifed.architecture.app.mvp.view_notification.ViewNotification;
 
 
@@ -12,6 +9,6 @@ import com.fifed.architecture.app.mvp.view_notification.ViewNotification;
  */
 public interface FragmentFeedBackInterface {
     void initBackPressed();
-    void changeFragmentTo(BaseFragmentIdentifier fragmentsID, @Nullable Bundle bundle);
+    void changeFragmentTo(FragmentData data);
     void sendNotificationToManager(ViewNotification notification);
 }
