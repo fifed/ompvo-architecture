@@ -9,5 +9,5 @@ import com.fifed.architecture.datacontroller.interaction.core.Action;
 public interface InteractorActionInterface {
     void sendUserAction(Action action);
     void sendPreloadAction(Action action);
-    void onObserverIsDestroyed(String observerTag);
+    void onObserverDestroyed(String observerTag);
 }

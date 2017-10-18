@@ -293,6 +293,11 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
     }
 
     public void addActionToOfflineQueue(Action action){
+        for (int i = 0; i < offlineActionQueue.size(); i++) {
+            if(offlineActionQueue.get(i).getClass().getSimpleName().equals(action.getClass().getSimpleName())){
+                offlineActionQueue.remove(i);
+            }
+        }
         offlineActionQueue.add(action);
     }
 
@@ -302,6 +307,16 @@ public abstract class BaseInteractor implements ObservableInteractor, Interactor
         }
         offlineActionQueue.clear();
     }
+
+    @Override
+    public void onObserverDestroyed(String observerTag) {
+        for (int i = 0; i < offlineActionQueue.size(); i++) {
+            if(offlineActionQueue.get(i).getObserverTag().equals(observerTag)){
+                offlineActionQueue.remove(i);
+            }
+        }
+    }
+    public abstract void onObserverIsDestroyed(String observerTag);
 
     public void clearPreloadedData(){
         preloadedModels.clear();
