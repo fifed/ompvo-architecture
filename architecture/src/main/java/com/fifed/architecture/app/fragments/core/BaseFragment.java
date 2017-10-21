@@ -8,6 +8,7 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -29,6 +30,7 @@ import com.fifed.architecture.app.activities.interfaces.ActivityStateInterface;
 import com.fifed.architecture.app.activities.interfaces.feedback_interfaces.core.FragmentFeedBackInterface;
 import com.fifed.architecture.app.constants.FragmentData;
 import com.fifed.architecture.app.fragments.utils.FragmentAnimUtils;
+import com.fifed.architecture.app.mvp.view_notification.ViewNotification;
 import com.fifed.architecture.app.observers.ObservebleActivity;
 import com.fifed.architecture.app.observers.ObserverActivity;
 import com.fifed.architecture.datacontroller.interaction.core.Action;
@@ -221,7 +223,7 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
         if(getFragmentFeedBackInterface() != null && !isAfterSaveInstanteState()){
             getFragmentFeedBackInterface().changeFragmentTo(data);
         } else if(getFragmentFeedBackInterface() != null){
-            new Handler(getActivity().getMainLooper()).postDelayed(new Runnable() {
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     changeFragmentTo(data);
@@ -229,6 +231,31 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
             }, 500);
         }
     }
+
+    protected void sendAction(Action action){
+        if(getActionInterface()!= null){
+            getActionInterface().userMadeAction(action);
+        }
+    }
+
+    protected void sendViewNotification(ViewNotification vn){
+        if(getFragmentFeedBackInterface() != null){
+            getFragmentFeedBackInterface().sendNotificationToManager(vn);
+        }
+    }
+
+    protected void preloadForAction(Action action){
+        if(getActionInterface() != null){
+            getActionInterface().preloadForAction(action);
+        }
+    }
+
+    protected void initBackPressed(){
+        if(getFragmentFeedBackInterface()!= null) {
+            getFragmentFeedBackInterface().initBackPressed();
+        }
+    }
+
 
     public ActivityActionInterface getActionInterface() {
         return (ActivityActionInterface) getActivity();
@@ -249,9 +276,7 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
     protected Toolbar getToolbar(){
         return getContentInteface().getToolbar();
     }
-    protected void initBackPressed(){
-        getFragmentFeedBackInterface().initBackPressed();
-    }
+
     protected void showBackArrowOnToolbar(){
         getToolbar().setNavigationIcon(0);
         getToolbar().setLogo(0);

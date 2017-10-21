@@ -22,6 +22,9 @@ public class UserSpecialInformer {
         config = informerConfig;
     }
 
+    public static void showInformationForUser(View view, String text){
+        showInformationForUser(view, text, DEF_COLOR, DEF_COLOR);
+    }
 
     public static void showInformationForUser(View view, String text, @ColorInt int textColor, @ColorInt int backgroundColor){
         try {
@@ -39,6 +42,10 @@ public class UserSpecialInformer {
         } catch (NullPointerException e){
             e.printStackTrace();
         }
+    }
+
+    public static void showInfoErrorForUser(View view, String text){
+        showInfoErrorForUser(view, text, DEF_COLOR, DEF_COLOR);
     }
 
     public static void showInfoErrorForUser(View view, String text, @ColorInt int textColor, @ColorInt int backgroundColor){

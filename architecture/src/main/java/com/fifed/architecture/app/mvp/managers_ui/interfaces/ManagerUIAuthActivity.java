@@ -8,6 +8,6 @@ import com.fifed.architecture.app.mvp.managers_ui.interfaces.core.ManagerUI;
 /**
  * Created by Fedir on 01.07.2016.
  */
-public interface ManagerUIAuthActivity extends ManagerUI {
+public interface ManagerUIAuthActivity extends ManagerUI{
     void startContentActivity(Intent intent);
 }
