@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import com.fifed.architecture.app.observers.ObservebleActivity;
+import com.fifed.architecture.app.observers.ObservableActivity;
 import com.fifed.architecture.app.observers.ObserverActivity;
 
 import java.lang.ref.WeakReference;
@@ -125,7 +125,7 @@ public abstract class BaseWindow implements ObserverActivity {
 
     private void show(){
         if(!windowShowing) {
-            ((ObservebleActivity)activity).registerObserver(this);
+            ((ObservableActivity)activity).registerObserver(this);
             windowManager.addView(rootView, windowParams);
             windowShowing = true;
             onShow();
@@ -134,7 +134,7 @@ public abstract class BaseWindow implements ObserverActivity {
 
     private void close(){
         if(windowShowing) {
-            ((ObservebleActivity)activity).unregisterObserver(this);
+            ((ObservableActivity)activity).unregisterObserver(this);
             onHide();
             windowShowing = false;
             windowManager.removeViewImmediate(rootView);

@@ -27,7 +27,7 @@ import com.fifed.architecture.app.activities.interfaces.ActivityContentInterface
 import com.fifed.architecture.app.activities.interfaces.ActivityStateInterface;
 import com.fifed.architecture.app.activities.interfaces.feedback_interfaces.core.FragmentFeedBackInterface;
 import com.fifed.architecture.app.constants.FragmentData;
-import com.fifed.architecture.app.observers.ObservebleActivity;
+import com.fifed.architecture.app.observers.ObservableActivity;
 import com.fifed.architecture.app.observers.ObserverActivity;
 import com.fifed.architecture.app.utils.ResourceHelper;
 import com.fifed.architecture.datacontroller.interaction.core.Action;
@@ -77,7 +77,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements Obser
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((ObservebleActivity) getActivity()).registerObserver(this);
+        ((ObservableActivity) getActivity()).registerObserver(this);
         onFragmentRegisteredAsObserver();
 
     }
@@ -107,7 +107,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements Obser
 
     @Override
     public void onDestroyView() {
-        ((ObservebleActivity) getActivity()).unregisterObserver(this);
+        ((ObservableActivity) getActivity()).unregisterObserver(this);
         onFragmentUnregisteredAsObserver();
         super.onDestroyView();
     }

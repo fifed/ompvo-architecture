@@ -24,8 +24,4 @@ public  abstract class BaseAuthorizotionActivityManagerUI extends BaseManagerUI 
         getActivity().overridePendingTransition(R.anim.fragment_animation_enter, R.anim.fragment_animation_exit);
     }
 
-    @Override
-    protected Class<?> getFirstInStackFragmentClass() {
-        return null;
-    }
 }

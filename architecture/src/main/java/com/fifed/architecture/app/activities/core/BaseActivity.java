@@ -22,7 +22,7 @@ import com.fifed.architecture.app.mvp.presenters.BaseViewPresenter;
 import com.fifed.architecture.app.mvp.presenters.intefaces.Presenter;
 import com.fifed.architecture.app.mvp.view_notification.ViewNotification;
 import com.fifed.architecture.app.mvp.views.ActivityView;
-import com.fifed.architecture.app.observers.ObservebleActivity;
+import com.fifed.architecture.app.observers.ObservableActivity;
 import com.fifed.architecture.app.observers.ObserverActivity;
 import com.fifed.architecture.app.utils.ModelFilter;
 import com.fifed.architecture.datacontroller.interaction.core.Action;
@@ -39,7 +39,7 @@ import static com.fifed.architecture.app.utils.user_informer.UserSpecialInformer
 /**
  * Created by Fedir on 30.06.2016.
  */
-public abstract class BaseActivity extends AppCompatActivity implements ObservebleActivity, ActivityView, ActivityActionInterface, ActivityStateInterface, ActivityContentInterface, FragmentFeedBackInterface {
+public abstract class BaseActivity extends AppCompatActivity implements ObservableActivity, ActivityView, ActivityActionInterface, ActivityStateInterface, ActivityContentInterface, FragmentFeedBackInterface {
     private ArrayList<ObserverActivity> observerList = new ArrayList<>();
     private List<ObserverActivity> passiveObserverList = new ArrayList<>();
     protected ManagerUI managerUI;
@@ -60,13 +60,12 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
         rootView = findViewById(android.R.id.content);
         presenter = getViewPresenter();
         managerUI = getManagerUIToInit();
-        onActivityCreated();
+        onActivityInited();
     }
 
 
-    protected void onActivityCreated(){
+    protected void onActivityInited(){}
 
-    }
     public boolean isActivityRotated(){
         return isRotated;
     }
@@ -195,6 +194,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
 
     @Override
     public void notifyObserversOnUpdateData(Model model) {
+        if(handleModelInActivity(model)){
+            return;
+        }
         if(model.getAction().isSingleResponse()){
             for (int i = 0; i < observerList.size(); i++) {
                 ObserverActivity observer = observerList.get(i);
@@ -231,6 +233,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
         }
     }
 
+    protected boolean handleModelInActivity(Model model){
+        return false;
+    }
+
     @Override
     public void userMadeAction(Action action) {
         presenter.onUserMadeAction(action);
@@ -244,7 +250,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
     @Override
     public void notifyObserversOnError(ErrorData errorData) {
         if (errorData.getGlobalErrorMessage() != null) {
-            handleErrorInActivity(errorData);
+            handleGlobalError(errorData);
+        }
+        if(handleErrorInActivity(errorData)){
+            return;
         }
         for (int i = 0; i < observerList.size(); i++) {
             ObserverActivity observer = observerList.get(i);
@@ -261,6 +270,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
                 break;
             }
         }
+    }
+
+    protected boolean handleErrorInActivity(ErrorData errorData){
+        return false;
     }
 
     @Override
@@ -286,7 +299,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
         managerUI.changeFragmentTo(data);
     }
 
-    protected void handleErrorInActivity(ErrorData errorData) {
+    protected void handleGlobalError(ErrorData errorData) {
         if(!errorData.getGlobalErrorMessage().equals(lastError)) {
             showInfoErrorForUser(rootView, errorData.getGlobalErrorMessage(),
                     DEF_COLOR, DEF_COLOR);
@@ -298,9 +311,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Observeb
                 }
             }, 2000);
         }
-
     }
-
 
     @Override
     public Toolbar getToolbar() {

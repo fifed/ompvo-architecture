@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.fifed.architecture.app.activities.interfaces.ActivityActionInterface;
-import com.fifed.architecture.app.observers.ObservebleActivity;
+import com.fifed.architecture.app.observers.ObservableActivity;
 import com.fifed.architecture.app.observers.ObserverActivity;
 import com.fifed.architecture.datacontroller.interaction.core.Action;
 import com.fifed.architecture.datacontroller.interaction.core.ErrorData;
@@ -72,12 +72,12 @@ public class ExampleView extends View implements ObserverActivity {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        ((ObservebleActivity) getContext()).registerObserver(this);
+        ((ObservableActivity) getContext()).registerObserver(this);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        ((ObservebleActivity) getContext()).unregisterObserver(this);
+        ((ObservableActivity) getContext()).unregisterObserver(this);
     }
 }

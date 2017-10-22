@@ -31,7 +31,7 @@ import com.fifed.architecture.app.activities.interfaces.feedback_interfaces.core
 import com.fifed.architecture.app.constants.FragmentData;
 import com.fifed.architecture.app.fragments.utils.FragmentAnimUtils;
 import com.fifed.architecture.app.mvp.view_notification.ViewNotification;
-import com.fifed.architecture.app.observers.ObservebleActivity;
+import com.fifed.architecture.app.observers.ObservableActivity;
 import com.fifed.architecture.app.observers.ObserverActivity;
 import com.fifed.architecture.datacontroller.interaction.core.Action;
 import com.fifed.architecture.datacontroller.interaction.core.ErrorData;
@@ -61,7 +61,6 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
             root = vb.getRoot();
         } catch (NoClassDefFoundError | NullPointerException e) {
             root = inflater.inflate(getLayoutResource(), null);
-
         }
         initUI(root);
         setListeners();
@@ -82,7 +81,7 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
         }
         TAG = getClass().getSimpleName() + String.valueOf(hashCode());
         setRetainInstance(true);
-        ((ObservebleActivity) getActivity()).addAsPassiveObservers(this);
+        ((ObservableActivity) getActivity()).addAsPassiveObservers(this);
     }
 
     @Override
@@ -102,13 +101,13 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((ObservebleActivity) getActivity()).registerObserver(this);
+        ((ObservableActivity) getActivity()).registerObserver(this);
         onFragmentRegisteredAsObserver();
     }
 
     @Override
     public void onDestroyView() {
-        ((ObservebleActivity) getActivity()).unregisterObserver(this);
+        ((ObservableActivity) getActivity()).unregisterObserver(this);
         onFragmentUnregisteredAsObserver();
         fromBackStack = true;
         lastFragment = getClass();
@@ -119,7 +118,7 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ((ObservebleActivity) getActivity()).removePassiveObservers(this);
+        ((ObservableActivity) getActivity()).removePassiveObservers(this);
     }
 
     @CallSuper
