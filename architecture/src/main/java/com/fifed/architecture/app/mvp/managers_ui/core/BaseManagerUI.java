@@ -6,14 +6,17 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.fifed.architecture.R;
 import com.fifed.architecture.app.activities.interfaces.ActivityStateInterface;
 import com.fifed.architecture.app.fragments.core.BaseFragment;
+import com.fifed.architecture.app.fragments.transiotions.FragmentViewTransitionsRequest;
 import com.fifed.architecture.app.fragments.utils.FragmentAnimUtils;
 import com.fifed.architecture.app.mvp.managers_ui.interfaces.core.ManagerUI;
 
@@ -39,7 +42,8 @@ public abstract class BaseManagerUI implements ManagerUI {
         initToolbar();
         initToolbarContainer();
     }
-    protected AppCompatActivity getActivity (){
+
+    protected AppCompatActivity getActivity() {
         return activity;
     }
 
@@ -47,34 +51,37 @@ public abstract class BaseManagerUI implements ManagerUI {
 
     protected abstract int getIdFragmentsContainer();
 
-    protected void setDrawer(DrawerLayout drawer){
+    protected void setDrawer(DrawerLayout drawer) {
         this.drawer = drawer;
     }
 
-    protected void setToolbar(Toolbar toolbar){
+    protected void setToolbar(Toolbar toolbar) {
         this.toolbar = toolbar;
     }
 
-    protected  int getToolbarContainerID(){
+    protected int getToolbarContainerID() {
         return 0;
     }
 
-    private void initToolbarContainer(){
-        if(toolbar != null) {
+    private void initToolbarContainer() {
+        if (toolbar != null) {
             toolbarContainer = (ViewGroup) toolbar.findViewById(getToolbarContainerID());
         }
     }
 
-
     protected void addFragmentToContainer(BaseFragment fragment, boolean toBackStack, @Nullable Bundle bundle) {
+        addFragmentToContainer(fragment, toBackStack, bundle, null);
+    }
+
+    protected void addFragmentToContainer(BaseFragment fragment, boolean toBackStack, @Nullable Bundle bundle, @Nullable FragmentViewTransitionsRequest request) {
         fragment.setArguments(bundle);
         FragmentManager fm = getActivity().getSupportFragmentManager();
         if (fragment.getClass() == getFirstInStackFragmentClass()) {
-            if(useFragmentAnim) {
+            if (useFragmentAnim) {
                 FragmentAnimUtils.revertAnim();
             }
             BaseFragment dashboardFragment = (BaseFragment) getActivity().getSupportFragmentManager().findFragmentByTag(getFirstInStackFragmentClass().getSimpleName());
-            if(dashboardFragment!= null) {
+            if (dashboardFragment != null) {
                 dashboardFragment.reloadedAsNewFragment(true);
                 dashboardFragment.onReloadFromPassiveState(bundle);
                 for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
@@ -93,7 +100,7 @@ public abstract class BaseManagerUI implements ManagerUI {
             return;
         }
         boolean containsInBackStack = false;
-        if(sameFragment != null) {
+        if (sameFragment != null) {
             for (int i = 0; i < fm.getBackStackEntryCount(); i++) {
                 if (sameFragment.getClass().getSimpleName().equals(fm.getBackStackEntryAt(i).getName())) {
                     containsInBackStack = true;
@@ -102,7 +109,7 @@ public abstract class BaseManagerUI implements ManagerUI {
             }
         }
         if (sameFragment != null && containsInBackStack) {
-            if(useFragmentAnim) {
+            if (useFragmentAnim) {
                 FragmentAnimUtils.revertAnim();
             }
             sameFragment.reloadedAsNewFragment(true);
@@ -110,18 +117,24 @@ public abstract class BaseManagerUI implements ManagerUI {
             fm.popBackStackImmediate(sameFragment.getClass().getSimpleName(), 0);
         } else {
             FragmentTransaction transaction = fm.beginTransaction();
-            if(useFragmentAnim){
+            if (useFragmentAnim) {
                 transaction.setCustomAnimations(
                         getFragmentAnimationEnter(), getFragmentAnimationExit(),
                         getFragmentAnimationPopEnter(), getFragmentAnimationPopExit());
             }
             if (toBackStack) {
                 transaction.addToBackStack(fragment.getClass().getSimpleName())
-                        .replace(getIdFragmentsContainer(), fragment, fragment.getClass().getSimpleName()).commitAllowingStateLoss();
+                        .replace(getIdFragmentsContainer(), fragment, fragment.getClass().getSimpleName());
             } else {
                 transaction
-                        .replace(getIdFragmentsContainer(), fragment, fragment.getClass().getSimpleName()).commitAllowingStateLoss();
+                        .replace(getIdFragmentsContainer(), fragment, fragment.getClass().getSimpleName());
             }
+            if (FragmentViewTransitionsRequest.isLolipop() && request != null && request.getRequests().size() > 0) {
+                for (View v : request.getRequests()) {
+                    transaction.addSharedElement(v, ViewCompat.getTransitionName(v));
+                }
+            }
+            transaction.commitAllowingStateLoss();
         }
     }
 
@@ -132,12 +145,12 @@ public abstract class BaseManagerUI implements ManagerUI {
     }
 
     @Override
-    public ViewGroup getToolbarContainer(){
+    public ViewGroup getToolbarContainer() {
         return toolbarContainer;
     }
 
     @Override
-    public  void initToolbar(){
+    public void initToolbar() {
 
     }
 
@@ -155,10 +168,10 @@ public abstract class BaseManagerUI implements ManagerUI {
 
     }
 
-    protected List<Fragment> getCurrentAddedFragments(){
-        List<Fragment> allFragments =  getActivity().getSupportFragmentManager().getFragments();
+    protected List<Fragment> getCurrentAddedFragments() {
+        List<Fragment> allFragments = getActivity().getSupportFragmentManager().getFragments();
         List<Fragment> addedFragments = new ArrayList<>();
-        if(allFragments != null) {
+        if (allFragments != null) {
             for (Fragment fragment : allFragments) {
                 if (fragment != null && fragment.isAdded()) {
                     addedFragments.add(fragment);
@@ -167,31 +180,32 @@ public abstract class BaseManagerUI implements ManagerUI {
         }
         return addedFragments;
     }
-    protected boolean isActivityRotated(){
-        return ((ActivityStateInterface)getActivity()).isActivityRotated();
+
+    protected boolean isActivityRotated() {
+        return ((ActivityStateInterface) getActivity()).isActivityRotated();
     }
 
-    public void setEnabledFragmentAnimations(boolean enabled){
+    public void setEnabledFragmentAnimations(boolean enabled) {
         useFragmentAnim = enabled;
     }
 
     @AnimRes
-    protected int getFragmentAnimationEnter(){
+    protected int getFragmentAnimationEnter() {
         return R.anim.fragment_animation_enter;
     }
 
     @AnimRes
-    protected int getFragmentAnimationExit(){
+    protected int getFragmentAnimationExit() {
         return R.anim.fragment_animation_exit;
     }
 
     @AnimRes
-    protected int getFragmentAnimationPopEnter(){
+    protected int getFragmentAnimationPopEnter() {
         return R.anim.fragment_animation_pop_enter;
     }
 
     @AnimRes
-    protected int getFragmentAnimationPopExit(){
+    protected int getFragmentAnimationPopExit() {
         return R.anim.fragment_animation_pop_exit;
     }
 
