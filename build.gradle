@@ -10,7 +10,7 @@ buildscript {
     }
     dependencies {
         classpath gradlePlugins.android
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
     }
 }
 
