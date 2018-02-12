@@ -252,7 +252,7 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
     }
 
     protected void initBackPressed() {
-        if (getFragmentFeedBackInterface() != null) {
+        if (getFragmentFeedBackInterface() != null && isAdded()) {
             getFragmentFeedBackInterface().initBackPressed();
         }
     }
