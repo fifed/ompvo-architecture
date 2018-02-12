@@ -6,12 +6,14 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.transition.TransitionInflater;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -250,7 +252,7 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
     }
 
     protected void initBackPressed() {
-        if (getFragmentFeedBackInterface() != null && isAdded()) {
+        if (getFragmentFeedBackInterface() != null) {
             getFragmentFeedBackInterface().initBackPressed();
         }
     }
