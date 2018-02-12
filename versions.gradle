@@ -1,0 +1,11 @@
+ext.versions = [
+
+        // Android Versions
+        compileSdk           : 27,
+        targetSdk            : 27,
+        minSdk               : 21,
+        buildTools           : '27.0.3',
+
+        // Dependency Versions
+        supportLibrary       : '27.0.2',
+]
