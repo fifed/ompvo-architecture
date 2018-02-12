@@ -6,13 +6,6 @@ ext.versions = [
         minSdk               : 21,
         buildTools           : '27.0.3',
 
-        // Gradle Versions
-        android_gradle_plugin: '3.0.1',
-
         // Dependency Versions
         supportLibrary       : '27.0.2',
-]
-
-ext.gradlePlugins = [
-        android: "com.android.tools.build:gradle:$versions.android_gradle_plugin",
 ]
