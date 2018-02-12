@@ -41,7 +41,7 @@ import com.fifed.architecture.datacontroller.interaction.core.Model;
 /**
  * Created by Fedir on 30.06.2016.
  */
-public abstract class BaseFragment extends Fragment implements ObserverActivity, View.OnClickListener{
+public abstract class BaseFragment extends Fragment implements ObserverActivity, View.OnClickListener {
     private static boolean isEnabledRestoreAnim;
     private String TAG;
     private boolean fromBackStack;
@@ -76,7 +76,7 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             outStateData = savedInstanceState.getBundle(OUT_STATE_DATA);
         }
         TAG = getClass().getSimpleName() + String.valueOf(hashCode());
@@ -125,13 +125,13 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
         Animation animation;
-        if(FragmentAnimUtils.isRevertAnim()) {
+        if (FragmentAnimUtils.isRevertAnim()) {
             if (enter) {
                 animation = AnimationUtils.loadAnimation(getActivity(), R.anim.fragment_animation_enter);
             } else {
                 animation = AnimationUtils.loadAnimation(getActivity(), R.anim.fragment_animation_exit);
             }
-            if(!isEnabledRestoreAnim) {
+            if (!isEnabledRestoreAnim) {
                 isEnabledRestoreAnim = true;
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -141,12 +141,12 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
                     }
                 }, animation.getDuration());
             }
-        } else if(nextAnim != 0){
+        } else if (nextAnim != 0) {
             animation = AnimationUtils.loadAnimation(getActivity(), nextAnim);
         } else {
             animation = super.onCreateAnimation(transit, enter, nextAnim);
         }
-        if(animation != null){
+        if (animation != null) {
             animation.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
@@ -172,7 +172,7 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
         return isExecuteAnim || onBackPressed();
     }
 
-    public boolean onBackPressed(){
+    public boolean onBackPressed() {
         return false;
     }
 
@@ -181,13 +181,13 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
 
     }
 
-    protected void hideKeyboard(){
-        ((InputMethodManager)getContext().getSystemService(Service.INPUT_METHOD_SERVICE)).
+    protected void hideKeyboard() {
+        ((InputMethodManager) getContext().getSystemService(Service.INPUT_METHOD_SERVICE)).
                 hideSoftInputFromWindow(getActivity().findViewById(android.R.id.content).getWindowToken(), 0);
     }
 
-    protected boolean isKeyboardVisible(){
-        return ((InputMethodManager)getContext().getSystemService(Service.INPUT_METHOD_SERVICE)).isActive();
+    protected boolean isKeyboardVisible() {
+        return ((InputMethodManager) getContext().getSystemService(Service.INPUT_METHOD_SERVICE)).isActive();
     }
 
     @Override
@@ -218,10 +218,10 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
         return (FragmentFeedBackInterface) getActivity();
     }
 
-    protected void changeFragmentTo(final FragmentData data){
-        if(getFragmentFeedBackInterface() != null && !isAfterSaveInstanteState()){
+    protected void changeFragmentTo(final FragmentData data) {
+        if (getFragmentFeedBackInterface() != null && !isAfterSaveInstanteState()) {
             getFragmentFeedBackInterface().changeFragmentTo(data);
-        } else if(getFragmentFeedBackInterface() != null){
+        } else if (getFragmentFeedBackInterface() != null) {
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -231,26 +231,26 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
         }
     }
 
-    protected void sendAction(Action action){
-        if(getActionInterface()!= null){
+    protected void sendAction(Action action) {
+        if (getActionInterface() != null) {
             getActionInterface().userMadeAction(action);
         }
     }
 
-    protected void sendViewNotification(ViewNotification vn){
-        if(getFragmentFeedBackInterface() != null){
+    protected void sendViewNotification(ViewNotification vn) {
+        if (getFragmentFeedBackInterface() != null) {
             getFragmentFeedBackInterface().sendNotificationToManager(vn);
         }
     }
 
-    protected void preloadForAction(Action action){
-        if(getActionInterface() != null){
+    protected void preloadForAction(Action action) {
+        if (getActionInterface() != null) {
             getActionInterface().preloadForAction(action);
         }
     }
 
-    protected void initBackPressed(){
-        if(getFragmentFeedBackInterface()!= null) {
+    protected void initBackPressed() {
+        if (getFragmentFeedBackInterface() != null && isAdded()) {
             getFragmentFeedBackInterface().initBackPressed();
         }
     }
@@ -259,47 +259,62 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
     public ActivityActionInterface getActionInterface() {
         return (ActivityActionInterface) getActivity();
     }
-    protected void initUI(View v){}
-    protected void onBindingFinish(ViewDataBinding vb){}
-    protected  void setListeners(){}
-    protected  void onFragmentRegisteredAsObserver(){
 
-    }
-    protected void onFragmentUnregisteredAsObserver(){
-
+    protected void initUI(View v) {
     }
 
-    protected ActivityContentInterface getContentInteface(){
-        return (ActivityContentInterface)getActivity();
+    protected void onBindingFinish(ViewDataBinding vb) {
     }
-    protected Toolbar getToolbar(){
+
+    protected void setListeners() {
+    }
+
+    protected void onFragmentRegisteredAsObserver() {
+
+    }
+
+    protected void onFragmentUnregisteredAsObserver() {
+
+    }
+
+    protected ActivityContentInterface getContentInteface() {
+        return (ActivityContentInterface) getActivity();
+    }
+
+    protected Toolbar getToolbar() {
         return getContentInteface().getToolbar();
     }
 
-    protected void showBackArrowOnToolbar(){
+    protected void showBackArrowOnToolbar() {
         getToolbar().setNavigationIcon(0);
         getToolbar().setLogo(0);
     }
-    protected void hideBackArrowOnToolbar(){
+
+    protected void hideBackArrowOnToolbar() {
         getToolbar().setNavigationIcon(null);
         getToolbar().setLogo(null);
     }
-    protected DrawerLayout getDrawer(){
+
+    protected DrawerLayout getDrawer() {
         return getContentInteface().getDrawer();
     }
-    protected void showMenuIconOnToolbar(){
+
+    protected void showMenuIconOnToolbar() {
         getToolbar().setNavigationIcon(0);
     }
-    protected void hideMenuIconOnToolbar(){
+
+    protected void hideMenuIconOnToolbar() {
         getToolbar().setNavigationIcon(null);
     }
-    protected void clearAllFragmentsBackStack(){
+
+    protected void clearAllFragmentsBackStack() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+        for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
             fm.popBackStack();
         }
     }
-    protected ViewGroup getToolbarContainer(){
+
+    protected ViewGroup getToolbarContainer() {
         return ((ActivityContentInterface) getActivity()).getToolbarContainer();
     }
 
@@ -307,46 +322,54 @@ public abstract class BaseFragment extends Fragment implements ObserverActivity,
         return fromBackStack;
     }
 
-    protected SharedPreferences getSharedPreferences(){
+    protected SharedPreferences getSharedPreferences() {
         return getActivity().getPreferences(Context.MODE_PRIVATE);
     }
-    protected SharedPreferences.Editor getPreferencesEditor(){
+
+    protected SharedPreferences.Editor getPreferencesEditor() {
         return getActivity().getPreferences(Context.MODE_PRIVATE).edit();
     }
-    protected boolean isPortraitMode(){
+
+    protected boolean isPortraitMode() {
         return getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
     }
-    protected  boolean isTablet() {
+
+    protected boolean isTablet() {
         boolean xlarge = ((getActivity().getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) ==
                 Configuration.SCREENLAYOUT_SIZE_XLARGE);
         boolean large = ((getActivity().getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) ==
                 Configuration.SCREENLAYOUT_SIZE_LARGE);
         return (xlarge || large);
     }
-    protected boolean isAfterSaveInstanteState(){
-        return ((ActivityStateInterface)getActivity()).isAfterSaveInstanceState();
+
+    protected boolean isAfterSaveInstanteState() {
+        return ((ActivityStateInterface) getActivity()).isAfterSaveInstanceState();
     }
 
-    public BaseFragment reloadedAsNewFragment(boolean reloadedAsNewFragment){
+    public BaseFragment reloadedAsNewFragment(boolean reloadedAsNewFragment) {
         this.reloadedAsNewFragment = reloadedAsNewFragment;
         return this;
     }
-    protected boolean isReloadedAsNewFragment(){
+
+    protected boolean isReloadedAsNewFragment() {
         return reloadedAsNewFragment;
     }
+
     @CallSuper
-    public void onReloadFragmentDataWithOutChangeState(@Nullable Bundle bundle){
+    public void onReloadFragmentDataWithOutChangeState(@Nullable Bundle bundle) {
         outStateData = bundle;
     }
+
     @CallSuper
     public void onReloadFromPassiveState(Bundle bundle) {
         outStateData = bundle;
     }
 
     @Nullable
-    protected Bundle getFragmentData(){
+    protected Bundle getFragmentData() {
         return outStateData;
     }
+
     public static Class<? extends Fragment> getLastVisibleFragment() {
         return lastFragment;
     }
